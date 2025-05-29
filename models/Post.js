@@ -7,6 +7,7 @@ const postSchema = new mongoose.Schema({
     createAt: { type: Date, default: Date.now },
 });
 
+// asdf
 // 모델 생성
 // 위에서 만든 구조(스키마)를 기반으로 모델을 생성
 const Post = mongoose.model('Post', postSchema);
