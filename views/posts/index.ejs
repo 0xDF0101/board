@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>익명 게시판</title>
+</head>
+
+<body>
+
+    <!-- 게시글 목록 페이지 템플릿 -->
+    <h1>게시글 목록</h1>
+    <a href="/posts/new">[새 글 작성]</a>
+    <ul>
+        <% postsFromDB.forEach((post)=> { %>
+            <li>
+                <a href="/posts/<%= post._id %>"><strong>
+                        <%= post.title %>
+                    </strong></a>
+                <p>좋아요 갯수 : <%= post.likes%>
+                </p>
+                <form action="/posts/<%= post._id %>/like" method="POST">
+                    <button type="submit">Like</button><br>
+                </form>
+                <%= post.content %>
+                    <br>
+                    <br>
+                    <br>
+            </li>
+            <% }) %>
+
+    </ul>
+
+</body>
+
+</html>

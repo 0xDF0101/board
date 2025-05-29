@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>게시글 수정</title>
+</head>
+
+<body>
+
+    <h1>게시글 수정</h1>
+    <form action="/posts/<%=post._id%>?_method=PUT" method="POST">
+        <input type="text" name="title" placeholder="<%= post.title%>" required /><br><br>
+        <textarea name="content" placeholder="<%= post.content%>" required><%= post.content%></textarea>
+        <button type="submit">수정 완료</button>
+    </form>
+</body>
+
+</html>

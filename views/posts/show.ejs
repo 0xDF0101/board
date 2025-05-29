@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>
+        <%= post.title %>
+    </title>
+</head>
+
+<body>
+
+    <!-- 게시글 상세 페이지 템플릿 -->
+
+    <h1>
+        <%= post.title %>
+    </h1>
+    <p>
+        <%= post.content %>
+    </p>
+
+    <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;"><button
+            type="submit">삭제</button>
+    </form>
+
+    <a href="/posts/<%= post._id %>/edit">수정</a>
+
+    <a href="/posts">← 목록으로 돌아가기</a>
+</body>
+
+</html>
