@@ -6,6 +6,7 @@
     <title>익명 게시판</title>
 </head>
 
+
 <body>
 
     <!-- 게시글 목록 페이지 템플릿 -->
@@ -20,7 +21,9 @@
                 <p>좋아요 갯수 : <%= post.likes%>
                 </p>
                 <form action="/posts/<%= post._id %>/like" method="POST">
-                    <button type="submit">Like</button><br>
+                    <button id="likeBtn" data-id="<%= post._id %>">Like<span id="likeCount">
+                            <%=post.likes %>
+                        </span></button><br>
                 </form>
                 <%= post.content %>
                     <br>
@@ -31,6 +34,8 @@
 
     </ul>
 
+
+    <script src="/public/js/like.js"></script>
 </body>
 
 </html>

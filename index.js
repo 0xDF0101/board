@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const postRoutes = require('./routes/posts'); // 라우터 불러오기
 const { promiseImpl } = require('ejs');
+const { applyTimestamps } = require('./models/Post');
 app.use('/posts', postRoutes); // /posts 경로로 오는 것들은 posts 라우터로 싹 보냄
 
 app.get('/', (req, res) => {

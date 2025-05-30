@@ -84,12 +84,12 @@ router.delete('/:id', (req, res) => {
 router.post('/:id/like', (req, res) => {
     const id = req.params.id;
 
-    Post.findByIdAndUpdate(id, { $inc: { likes: 1 } })
-        .then((post) => {
-            if (!post) {
+    Post.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true })
+        .then((updatePost) => {
+            if (!updatePost) {
                 return res.status(404).send('해당 게시글을 찾지 못했습니다.');
             }
-            res.redirect('/posts');
+            res.json({ likes: updatePost.likes });
         })
         .catch((err) => {
             console.error('서버 오류', err);
