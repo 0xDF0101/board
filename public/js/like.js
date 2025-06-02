@@ -2,27 +2,30 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // html 모두 로드된 후 실행하라는 의미
-    const likeBtn = document.getElementById('likeBtn');
-    const likeCountSpan = document.getElementById('likeCount');
+    const likeBtns = document.querySelectorAll('.likeBtn');
 
-    likeBtn.addEventListener('click', () => {
-        const postId = likeBtn.dataset.id;
+    likeBtns.forEach((likeBtn) => {
+        likeBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            const postId = likeBtn.dataset.id;
+            const likeCountSpan = likeBtn.querySelector('.likeCount');
 
-        fetch(`/post/${postId}/like`, {
-            method: 'POST',
-        })
-            .then((res) => {
-                if (!res.ok) throw new Error('요청 실패');
-                return res.json(); // 서버에서 JSON 응답이 올 경우
-                // -> 응답을 JSON으로 파싱
+            fetch(`/posts/${postId}/like`, {
+                method: 'POST', // POST를 여기서 명시해주기 때문에 ejs에서 POST 요청 없어도 됨
             })
-            .then((data) => {
-                // 파싱된 데이터를 활용
-                // 서버에서 새 좋아요 수를 응답했다면 반영
-                likeCountSpan.textContent = data.likes;
-            })
-            .catch((err) => {
-                console.error('좋아요 처리 중 에러', err);
-            });
+                .then((res) => {
+                    if (!res.ok) throw new Error('요청 실패');
+                    return res.json(); // 서버에서 JSON 응답이 올 경우
+                    // -> 응답을 JSON으로 파싱
+                })
+                .then((data) => {
+                    // 파싱된 데이터를 활용
+                    // 서버에서 새 좋아요 수를 응답했다면 반영
+                    likeCountSpan.textContent = data.likes;
+                })
+                .catch((err) => {
+                    console.error('좋아요 처리 중 에러', err);
+                });
+        });
     });
 });

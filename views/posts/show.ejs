@@ -18,6 +18,8 @@
     <p>
         <%= post.content %>
     </p>
+    <p>좋아요 갯수 : <%= post.likes%>
+    </p>
 
     <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;"><button
             type="submit">삭제</button>
