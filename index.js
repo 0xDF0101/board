@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express(); // express 객체 생성
 const PORT = 3000;
+const path = require('path');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
@@ -14,6 +15,7 @@ mongoose
     .catch((err) => console.error('DB 연결 실패', err));
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
@@ -30,6 +32,10 @@ app.use('/posts', postRoutes); // /posts 경로로 오는 것들은 posts 라우
 
 app.get('/', (req, res) => {
     res.send('Hello, Anonymous Board');
+});
+
+app.get('/test', (req, res) => {
+    res.render('posts/index');
 });
 
 app.listen(PORT, () => {
