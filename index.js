@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // 이 미들웨어는 form으로부터 넘어온 title, content의 데이터를 req.body 안에 넣어주는 역할을 함
 
 const postRoutes = require('./routes/posts'); // 라우터 불러오기
-const { promiseImpl } = require('ejs');
+// const { promiseImpl } = require('ejs');
 const { applyTimestamps } = require('./models/Post');
 app.use('/posts', postRoutes); // /posts 경로로 오는 것들은 posts 라우터로 싹 보냄
 
@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    res.render('posts/index');
+    res.render('posts/index', { postsFromDB: [] });
 });
 
 app.listen(PORT, () => {
