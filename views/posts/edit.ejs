@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>게시글 수정</title>
-</head>
-
-<body>
-
+<%- include('../partials/header', {title:post.title}) %>
     <h1>게시글 수정</h1>
+    <br>
     <form action="/posts/<%=post._id%>?_method=PUT" method="POST">
-        <input type="text" name="title" placeholder="<%= post.title%>" required /><br><br>
-        <textarea name="content" placeholder="<%= post.content%>" required><%= post.content%></textarea>
-        <button type="submit">수정 완료</button>
-    </form>
-</body>
+        <input type="text" name="title" value="<%= post.title%>" style="width:100%" required /><br><br>
+        <textarea name="content" class="big-textarea" required><%= post.content%></textarea>
+        <br>
+        <br>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-danger" type="submit">수정 완료</button>
+            <a href="/posts/<%= post._id %>" class="btn btn-sm btn-outline-secondary">취소</a>
 
-</html>
+        </div>
+    </form>
+
+    <%- include('../partials/footer') %>

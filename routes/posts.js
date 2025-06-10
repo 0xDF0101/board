@@ -28,6 +28,7 @@ router.post('/', (req, res) => {
 // index.ejs에 post데이터를 전송하는 라우터
 router.get('/', (req, res) => {
     Post.find()
+        .sort({ createdAt: -1 })
         .then((postsFromDB) => {
             res.render('posts/index', { postsFromDB });
         })
@@ -38,9 +39,9 @@ router.get('/', (req, res) => {
     // res.render('posts/index', { posts }); // 여기 부분
 });
 
-// 새로운 글 작성 페이지를 전송하는 라우터
+// 새로운 게시글 작성 페이지로 이동
 router.get('/new', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/new.html'));
+    res.render('../views/new.ejs');
 });
 
 // 게시글 상세 페이지를 보여주는 라우터

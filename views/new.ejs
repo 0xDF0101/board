@@ -1,0 +1,11 @@
+<%- include('partials/header', {title:"새로운 글 작성"}) %>
+
+
+    <h1>새 글 작성</h1>
+    <form action="/posts" method="POST">
+        <input type="text" style="width:100%" name="title" placeholder="제목" required><br><br>
+        <textarea name="content" class="big-textarea" placeholder="내용" required></textarea><br><br>
+        <button type="submit" class="btn btn-primary">작성</button>
+    </form>
+
+    <%- include('partials/footer') %>

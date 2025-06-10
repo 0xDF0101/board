@@ -11,13 +11,13 @@
     <p>좋아요 갯수 : <%= post.likes%>
     </p>
 
-    <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;"><button
-            type="submit">삭제</button>
+    <a href="/posts/<%= post._id %>/edit" class="btn btn-sm btn-outline-primary">수정</a>
+    <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button class="btn btn-sm btn-outline-danger" type="submit">삭제</button>
     </form>
+    <a href="/posts" class="btn btn-sm btn-outline-secondary">← 목록으로 돌아가기</a>
 
-    <a href="/posts/<%= post._id %>/edit">수정</a>
 
-    <a href="/posts">← 목록으로 돌아가기</a>
 
 
     <%- include('../partials/footer') %>

@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 
-const postSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    content: String,
-    likes: { type: Number, default: 0 },
-    createAt: { type: Date, default: Date.now },
-});
+const postSchema = new mongoose.Schema(
+    {
+        title: { type: String, required: true },
+        content: String,
+        likes: { type: Number, default: 0 },
+    },
+    {
+        timestamps: true,
+    }
+);
 
 // asdf
 // 모델 생성
