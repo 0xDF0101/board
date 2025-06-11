@@ -33,7 +33,8 @@ const { applyTimestamps } = require('./models/Post');
 app.use('/posts', postRoutes); // /posts 경로로 오는 것들은 posts 라우터로 싹 보냄
 
 app.get('/', (req, res) => {
-    res.send('Hello, Anonymous Board');
+    res.redirect('/posts');
+    // res.send('Hello, Anonymous Board');
 });
 
 app.get('/test', (req, res) => {
