@@ -3,36 +3,44 @@
 
   <h1 class="mb-4">게시글 목록</h1>
   <a href="/posts/new" class="btn btn-primary mb-3">새 글 작성</a>
-  <ul>
+  <!-- <ul> -->
 
-    <div class="row">
-      <% postsFromDB.forEach((post)=> { %>
-        <div class="col-md-6 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
+  <div class="row">
+
+    <% postsFromDB.forEach((post)=> { %>
+      <div class="col-md-6 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title">
                 <a href="/posts/<%= post._id %>" class="no-style-link"><strong>
                     <%= post.title %>
                   </strong></a>
               </h5>
-              <p class="card-text">
-                <%= post.content %>
-              </p>
-              <div>
-                <button class="btn btn-sm btn-outline-danger likeBtn" data-id="<%= post._id %>">Like <span
-                    class="likeCount">
-                    <%=post.likes %>
-                  </span></button><br>
-
-              </div>
+              <small class="text-muted ms-2">
+                <%= post.updatedAt.toLocaleString('ko-KR', { year: 'numeric' , month: '2-digit' , day: '2-digit' ,
+                  hour: '2-digit' , minute: '2-digit' , hour12:false}) %>
+              </small>
             </div>
+            <p class="card-text">
+              <%= post.content %>
+            </p>
+            <div>
+              <button class="btn btn-sm btn-outline-danger likeBtn" data-id="<%= post._id %>">Like <span
+                  class="likeCount">
+                  <%=post.likes %>
+                </span></button><br>
+            </div>
+
           </div>
-
         </div>
-        <% }) %>
-    </div>
 
-  </ul>
+      </div>
+      <% }) %>
+  </div>
+
+  <!-- </ul> -->
   </div>
   <script src="/js/like.js"></script>
 

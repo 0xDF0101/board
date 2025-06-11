@@ -21,7 +21,6 @@ const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 // HTML에서 DELETE요청처럼 인식하게 해주는 코드
 
-app.use(express.static('public')); // 정적 파일 제공
 app.use(express.urlencoded({ extended: true }));
 // 이 미들웨어는 form으로부터 넘어온 title, content의 데이터를 req.body 안에 넣어주는 역할을 함
 

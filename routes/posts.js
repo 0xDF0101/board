@@ -28,12 +28,12 @@ router.post('/', (req, res) => {
 // index.ejs에 post데이터를 전송하는 라우터
 router.get('/', (req, res) => {
     Post.find()
-        .sort({ createdAt: -1 })
+        .sort({ updatedAt: -1 }) // createdA을 기준으로 내림차순 정렬
         .then((postsFromDB) => {
             res.render('posts/index', { postsFromDB });
         })
         .catch((err) => {
-            console.log('DB에서 데이터를 불러오지 못했습니다.', err);
+            console.log('DB에서렬데이터를 불러오지 못했습니다.', err);
             res.status(500).send('DB 에러 발생');
         });
     // res.render('posts/index', { posts }); // 여기 부분
