@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express(); // express 객체 생성
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const path = require('path');
 require('dotenv').config();
 
 const mongoose = require('mongoose');
+
+// 정적 파일 경로 설정??
+app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose
     .connect(process.env.MONGO_URL, {

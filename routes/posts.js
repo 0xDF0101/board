@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
 // index.ejs에 post데이터를 전송하는 라우터
 router.get('/', (req, res) => {
     Post.find()
-        .sort({ updatedAt: -1 }) // createdA을 기준으로 내림차순 정렬
+        .sort({ createdAt: -1 }) // createdA을 기준으로 내림차순 정렬
         .then((postsFromDB) => {
             res.render('posts/index', { postsFromDB });
         })
