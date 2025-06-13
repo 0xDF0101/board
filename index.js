@@ -9,12 +9,22 @@ const mongoose = require('mongoose');
 // 정적 파일 경로 설정??
 app.use(express.static(path.join(__dirname, 'public')));
 
+// DB 연결
+const isProduction = process.env.NODE_ENV === 'production';
+const mongoUri = isProduction
+    ? process.env.MONGO_PROD_URI
+    : process.env.MONGO_DEV_URI;
+
 mongoose
-    .connect(process.env.MONGO_URL, {
+    .connect(mongoUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
-    .then(() => console.log('DB 연결 성공'))
+    .then(() =>
+        console.log(
+            `✅ MongoDB connected to ${isProduction ? 'Production' : 'Dev'} DB`
+        )
+    )
     .catch((err) => console.error('DB 연결 실패', err));
 
 app.set('view engine', 'ejs');
