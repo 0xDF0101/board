@@ -1,0 +1,20 @@
+// 댓글 작성
+router.post('/:id/comments', (req, res) => {
+    const id = req.params.id; // id는 게시글 id겠지?
+    // 뭔가를 ejs에서 받아와야 함! req.body로
+    // 닉네임도 받아와야 하나?
+    const content = req.body;
+
+    Comment.create({
+        content: content,
+        post: id,
+    })
+        .then((newComment) => {
+            console.log('성공적으로 댓글 저장', newComment);
+            res.redirect(`/posts/:${id}`);
+        })
+        .catch((err) => {
+            console.log('댓글 저장이 안됐음!!!!', err);
+            res.status(500).send('서버 에러 발생');
+        });
+});

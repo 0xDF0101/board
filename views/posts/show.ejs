@@ -2,6 +2,8 @@
 
     <!-- 게시글 상세 페이지 템플릿 -->
 
+    <!-- post랑 comment로 댓글까지 받아볼 수 있음! -->
+
     <h1>
         <%= post.title %>
     </h1>
@@ -11,11 +13,19 @@
     <p>좋아요 갯수 : <%= post.likes%>
     </p>
 
+    <p>
+        <% comment.forEach((com)=> {
+            <%= com=>
+                })
+    </p>
+
+    <!-- 버튼따리들  -->
     <a href="/posts/<%= post._id %>/edit" class="btn btn-sm btn-outline-primary">수정</a>
     <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
         <button class="btn btn-sm btn-outline-danger" type="submit">삭제</button>
     </form>
     <a href="/posts" class="btn btn-sm btn-outline-secondary">← 목록으로 돌아가기</a>
+
 
 
 
