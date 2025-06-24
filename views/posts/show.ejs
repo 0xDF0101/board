@@ -1,60 +1,59 @@
 <%- include('../partials/header', {title: post.title}) %>
 
-    <!-- 게시글 상세 페이지 템플릿 -->
+  <!-- 게시글 상세 페이지 템플릿 -->
 
-    <!-- post랑 comment로 댓글까지 받아볼 수 있음! -->
+  <!-- post랑 comment로 댓글까지 받아볼 수 있음! -->
 
-    <h1>
-        <%= post.title %>
-    </h1>
-    <p>
-        <%= post.content %>
-    </p>
-    <p>좋아요 갯수 : <%= post.likes%>
-    </p>
-
-
-    <!-- 버튼따리들  -->
-    <a href="/posts/<%= post._id %>/edit" class="btn btn-sm btn-outline-primary">수정</a>
-    <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
-        <button class="btn btn-sm btn-outline-danger" type="submit">삭제</button>
-    </form>
-    <a href="/posts" class="btn btn-sm btn-outline-secondary">← 목록으로 돌아가기</a>
+  <h1>
+    <%= post.title %>
+  </h1>
+  <p>
+    <%= post.content %>
+  </p>
+  <p>좋아요 갯수 : <%= post.likes%>
+  </p>
 
 
-    <hr>
-    <!-- 기존 댓글 보여주기  -->
-    <h5>댓글 목록</h5>
-    <% if(comments.length===0) { %>
-        <p class="text-muted">아직 댓글이 없습니다.</p>
-        <% } else { %>
-            <ul class="list-group list-group-flush">
-                <% comments.forEach((comment)=> { %>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <%= comment.content %>
-                            <small class="text-muted ms-2">
-                                <%= comment.createdAt.toLocaleString('ko-KR', { year: 'numeric' , month: '2-digit' ,
-                                    day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12:false}) %>
-                            </small>
-                    </li>
+  <!-- 버튼따리들  -->
+  <a href="/posts/<%= post._id %>/edit" class="btn btn-sm btn-outline-primary">수정</a>
+  <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
+    <button class="btn btn-sm btn-outline-danger" type="submit">삭제</button>
+  </form>
+  <a href="/posts" class="btn btn-sm btn-outline-secondary">← 목록으로 돌아가기</a>
 
-                    <% }) %>
-            </ul>
-            <% } %>
 
-                <br>
-                <!-- 댓글 쓰기 기능 -->
-                <h5>댓글 작성</h5>
-                <form action="/comments/<%= post._id %>/comments" method="POST">
-                    <div class="mb-2">
-                        <textarea name="content" class="form-control" rows="3" required
-                            placeholder="댓글을 입력하세요"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-outline-primary btn-sm">작성</button>
-                </form>
+  <hr>
+  <!-- 기존 댓글 보여주기  -->
+  <h5>댓글 목록</h5>
+  <% if(comments.length===0) { %>
+    <p class="text-muted">아직 댓글이 없습니다.</p>
+    <% } else { %>
+      <ul class="list-group list-group-flush">
+        <% comments.forEach((comment)=> { %>
+          <li class="list-group-item d-flex justify-content-between">
+            <%= comment.content %>
+              <small class="text-muted ms-2">
+                <%= comment.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' , year: 'numeric' ,
+                  month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12:false}) %>
+              </small>
+          </li>
 
+          <% }) %>
+      </ul>
+      <% } %>
+
+        <br>
+        <!-- 댓글 쓰기 기능 -->
+        <h5>댓글 작성</h5>
+        <form action="/comments/<%= post._id %>/comments" method="POST">
+          <div class="mb-2">
+            <textarea name="content" class="form-control" rows="3" required placeholder="댓글을 입력하세요"></textarea>
+          </div>
+          <button type="submit" class="btn btn-outline-primary btn-sm">작성</button>
+        </form>
 
 
 
 
-                <%- include('../partials/footer') %>
+
+        <%- include('../partials/footer') %>
