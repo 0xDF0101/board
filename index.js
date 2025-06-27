@@ -42,9 +42,11 @@ const postRoutes = require('./routes/posts'); // 라우터 불러오기
 const { applyTimestamps } = require('./models/Post');
 // comment 관련 라우터
 const commentRoutes = require('./routes/comment');
+const userRoutes = require('./routes/user');
 
 app.use('/comments', commentRoutes); // comments경로는 모두 담당
 app.use('/posts', postRoutes); // /posts 경로로 오는 것들은 posts 라우터로 싹 보냄
+app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
     res.redirect('/posts');
