@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
         await newUser.save();
         // new + save() == Create() 같은 기능임
         console.log(`회원가입 성공, USER ID : ${newUser.userId}`);
-        res.redirect('/login'); // login 페이지로 이동
+        res.redirect('login'); // login 페이지로 이동
     } catch (err) {
         console.error('회원가입 실패', err);
         res.status(500).send('서버 오류');
@@ -41,6 +41,36 @@ router.get('/check-duplicate', async (req, res) => {
     } catch (err) {
         console.error('중복 검사 에러', err);
         res.status(500).json({ error: '서버 오류' });
+    }
+});
+
+router.get('/login', async (req, res) => {
+    res.render('user/login');
+});
+
+router.post('/login', async (req, res) => {
+    const { userId, userPw } = req.body;
+
+    try {
+        // id 존재 여부
+        const user = await User.findOne({ userId });
+        if (!user) {
+            return res.status(400).send('존재하지 않는 아이디입니다.');
+        }
+
+        // 비밀번호 일치 여부
+        const isMatch = await bcrypt.compare(userPw, user.userPw);
+        // userPw는 사용자가 입력한 친구
+        // user.userPw는 DB에서 가져온 친구
+        if (!isMatch) {
+            return res.status(400).send('비밀번호가 일치하지 않습니다.');
+        }
+
+        console.log('로그인 성공 : ', userId);
+        res.redirect('/posts');
+    } catch (err) {
+        console.error('로그인 실패', err);
+        res.status(500).send('서버 오류');
     }
 });
 

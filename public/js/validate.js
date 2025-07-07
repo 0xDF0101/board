@@ -1,4 +1,5 @@
 // 회원가입시, ID 중복성 검사와 PW 유효성 검사를 한 뒤 새로고침 없이 이어나가기 위한 AJAX 코드
+// 얘는 라우터가 아니라 ejs파일에 붙여사 사용하는 js파일임을 기억하자!!
 
 document.addEventListener('DOMContentLoaded', () => {
     // html 모두 로드된 후 실행하라는 의미
