@@ -3,8 +3,7 @@ const path = require('path');
 const router = express.Router();
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
-
-// let posts = [];
+const isLoggedIn = require('../middlewares/authMiddleware'); // 세션확인용 미들웨어
 
 // 새롭게 작성한 글을 저장하는 라우터
 router.post('/', (req, res) => {
@@ -27,7 +26,8 @@ router.post('/', (req, res) => {
 });
 
 // index.ejs에 게시글 목록 보여주는 라우터
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    /*
     Post.find()
         .sort({ createdAt: -1 }) // createdA을 기준으로 내림차순 정렬
         .then((postsFromDB) => {
@@ -38,10 +38,23 @@ router.get('/', (req, res) => {
             res.status(500).send('DB 에러 발생');
         });
     // res.render('posts/index', { posts }); // 여기 부분
+    */
+
+    try {
+        const postsFromDB = await Post.find().sort({ createdAt: -1 });
+        res.render('posts/index', {
+            postsFromDB: postsFromDB,
+            sessionUser: req.session.user,
+        }); // DB -> ejs로 post넘겨줌
+    } catch (err) {
+        console.log('DB에서 데이터를 불러오지 못했습니다.', err);
+        res.status(500).send('DB 에러 발생');
+    }
 });
 
 // 새로운 게시글 작성 페이지로 이동
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
+    // 로그인 된 사람만 이용 가능
     res.render('../views/new.ejs');
 });
 

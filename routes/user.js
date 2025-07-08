@@ -66,12 +66,32 @@ router.post('/login', async (req, res) => {
             return res.status(400).send('비밀번호가 일치하지 않습니다.');
         }
 
+        // 로그인 성공 -> 세션에 정보 저장
+        req.session.user = {
+            // 요청마다 얘를 확인하는거임
+            _id: user._id,
+            userId: user.userId,
+        };
         console.log('로그인 성공 : ', userId);
+        console.log('현재 세션 : ', req.session);
         res.redirect('/posts');
     } catch (err) {
         console.error('로그인 실패', err);
         res.status(500).send('서버 오류');
     }
+});
+
+// logout 라우터
+router.get('/logout', (req, res) => {
+    console.log('로그아웃 : ', req.session.user?.userId);
+
+    req.session.destroy((err) => {
+        if (err) {
+            console.log('로그아웃 실패');
+            return res.status(500).send('로그아웃 중 오류 발생');
+        }
+        res.redirect('/posts');
+    });
 });
 
 // 얘가 뭐하는 코드더라.../
