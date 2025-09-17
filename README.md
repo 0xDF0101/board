@@ -9,6 +9,11 @@ HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
 -   로그인 기능 구현 중
 -   메인 페이지 필요
 
+## 그리고 영원한 동반자 ChatGPT
+이 프로젝트는 html/css, js 관련 지식 쬐끔 말고는
+모두 GPT선생님과 협업으로 진행되고 있습니다.
+
+
 ## 구조
 
 ```
@@ -40,3 +45,4 @@ anonymous-board/
 │ └─ validate.js # 프론트 유효성 검사(AJAX)
 └─ README.md
 ```
+
