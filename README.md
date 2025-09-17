@@ -10,6 +10,7 @@ HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
 
 ## 구조
 
+```
 anonymous-board/
 ├─ index.js # 앱 진입점(Express 설정, 미들웨어, 라우터 등록)
 ├─ package.json # 중존성·실행 스크립트
@@ -37,3 +38,4 @@ anonymous-board/
 │ ├─ like.js # 클라이언트 AJAX (좋아요)
 │ └─ validate.js # 프론트 유효성 검사(AJAX)
 └─ README.md
+```
