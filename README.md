@@ -7,6 +7,7 @@ HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
 ## Log
 
 -   로그인 기능 구현 중
+-   메인 페이지 필요
 
 ## 구조
 
