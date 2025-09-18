@@ -1,13 +1,24 @@
 # 간단한 게시판 프로젝트
 
-## stack
+## 목적
 
-HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
+- 공부
+- 재미
 
 ## Log
 
 -   로그인 기능 구현 중
 -   메인 페이지 필요
+
+## 앞으로 구현할거 (해보고 싶은거)
+
+1. 로그인 된 사용자의 접근 권한 부여
+2. 사진 업로드 구현
+3. 홈 서버 구현해서 거기다 올리기 
+
+## stack
+
+HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
 
 ## 그리고 영원한 동반자 ChatGPT
 이 프로젝트는 html/css, js 관련 지식 쬐끔 말고는
@@ -45,4 +56,5 @@ anonymous-board/
 │ └─ validate.js # 프론트 유효성 검사(AJAX)
 └─ README.md
 ```
+
 
