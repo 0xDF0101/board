@@ -46,7 +46,7 @@ app.use(
     session({
         secret: process.env.SESSION_SECRET,
         resave: false, // 요청이 왔을때, 세션에 변경 사항 없으면 저장x
-        saveUninitialized: true, // 초기화되지 않은 세션을 저장할지 여부, 로그인하지 않은 유저에 대한 세션을 만들지 않음
+        saveUninitialized: false, // 초기화되지 않은 세션을 저장할지 여부, 로그인하지 않은 유저에 대한 세션을 만들지 않음
         cookie: { maxAge: 1000 * 60 * 60 }, // 세션 유지 시간 : 1h
     })
 );
