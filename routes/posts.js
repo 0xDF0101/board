@@ -7,7 +7,7 @@ const isLoggedIn = require('../middlewares/authMiddleware'); // 세션확인용 
 
 // 새롭게 작성한 글을 저장하는 라우터
 router.post('/', (req, res) => {
-    const { title, content } = req.body;
+    const { title, content } = req.body; // ejs에서 받아온 데이터 주입
     Post.create({
         title: title,
         content: content,
@@ -42,6 +42,7 @@ router.get('/', async (req, res) => {
 
     try {
         const postsFromDB = await Post.find().sort({ createdAt: -1 });
+        // ----> await가 이렇게 편하다!
         res.render('posts/index', {
             postsFromDB: postsFromDB,
             sessionUser: req.session.user,
@@ -53,7 +54,8 @@ router.get('/', async (req, res) => {
 });
 
 // 새로운 게시글 작성 페이지로 이동
-router.get('/new', isLoggedIn, (req, res) => {
+// --->>> isLogined 여기다가 넣었었음
+router.get('/new', (req, res) => {
     // 로그인 된 사람만 이용 가능
     res.render('../views/new.ejs');
 });

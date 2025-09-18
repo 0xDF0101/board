@@ -2,12 +2,13 @@ const express = require('express');
 const app = express(); // express 객체 생성
 const PORT = process.env.PORT || 3000;
 const path = require('path');
-const session = require('express-session');
+const session = require('express-session'); // ---> 세션 관리
 const isLoggedIn = require('./middlewares/authMiddleware');
 
 require('dotenv').config(); // .env에서 환경 변수를 불러올 수 있음
 
 const mongoose = require('mongoose');
+// ---> 모델 불러오김
 
 // 정적 파일 경로 설정??
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,7 +31,7 @@ mongoose
     )
     .catch((err) => console.error('DB 연결 실패', err));
 
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs'); // ejs를 view엔진으로 설정하는 듯?
 app.set('views', path.join(__dirname, 'views'));
 
 const methodOverride = require('method-override');
@@ -45,7 +46,7 @@ app.use(
     session({
         secret: process.env.SESSION_SECRET,
         resave: false, // 요청이 왔을때, 세션에 변경 사항 없으면 저장x
-        saveUninitialized: false, // 초기화되지 않은 세션을 저장할지 여부, 로그인하지 않은 유저에 대한 세션을 만들지 않음
+        saveUninitialized: true, // 초기화되지 않은 세션을 저장할지 여부, 로그인하지 않은 유저에 대한 세션을 만들지 않음
         cookie: { maxAge: 1000 * 60 * 60 }, // 세션 유지 시간 : 1h
     })
 );
@@ -71,5 +72,6 @@ app.get('/test', (req, res) => {
 });
 
 app.listen(PORT, () => {
+    // java에서 socketServer의 accept()랑 비슷한 역할을 하는 듯
     console.log(`Server running at http://localhost:${PORT}`);
 });

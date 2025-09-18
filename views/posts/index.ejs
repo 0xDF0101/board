@@ -4,14 +4,16 @@
   <h1 class="mb-4">게시글 목록</h1>
   <div class="d-flex justify-content-between">
     <a href="/posts/new" class="btn btn-primary mb-3">새 글 작성</a>
-    <!-- <ul> -->
     <% if(sessionUser) { %>
       <span class="me-2">로그인 됨 : <strong>
           <%= sessionUser.userId %>
         </strong></span>
       <a href="/users/logout" class="btn btn-danger mb-3">로그아웃</a>
       <% } else { %>
-        <a href="/users/login" class="btn btn-danger mb-3">로그인</a>
+        <div>
+          <a href="/users/login" class="btn btn-danger mb-3">로그인</a>
+          <a href="/users/register" class="btn btn mb-3">회원가입</a>
+        </div>
         <% } %>
   </div>
   <div class="row">
