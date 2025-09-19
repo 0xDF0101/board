@@ -7,8 +7,8 @@
   <h1>
     <%= post.title %>
   </h1>
-  <p>
-    <%= post.content %>
+  <p class="preserve-lines">
+    <%= post.content.trim() %>
   </p>
   <p>좋아요 갯수 : <%= post.likes%>
   </p>

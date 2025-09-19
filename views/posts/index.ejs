@@ -19,7 +19,7 @@
     <% postsFromDB.forEach((post)=> { %>
       <div class="col-md-6 mb-4">
         <div class="card h-100">
-          <div class="card-body">
+          <div class="card-body d-flex flex-column flex-grow-1">
 
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title">
@@ -28,16 +28,17 @@
                   </strong></a>
               </h5>
             </div>
-            <p class="card-text">
-              <%= post.content %>
+
+            <p class="card-text truncate-lines">
+              <%= post.content.trim() %>
             </p>
-            <div>
+
+            <div class="mt-auto">
               <button class="btn btn-sm btn-outline-danger likeBtn" data-id="<%= post._id %>">Like <span
                   class="likeCount">
                   <%=post.likes %>
                 </span></button><br>
             </div>
-
           </div>
           <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
             <small class="text-muted">
@@ -59,6 +60,7 @@
       </div>
       <% }) %>
   </div>
+
   <script src="/js/like.js"></script>
 
   <%- include('../partials/footer', {includeLikeScript: true}) %>
