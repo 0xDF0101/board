@@ -8,6 +8,12 @@ const postSchema = new mongoose.Schema(
         title: { type: String, required: true },
         content: String,
         likes: { type: Number, default: 0 },
+        author: {
+            // 로그인 관련
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // User 모델 참조
+            require: true,
+        },
     },
     {
         timestamps: true,

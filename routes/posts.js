@@ -3,15 +3,19 @@ const path = require('path');
 const router = express.Router();
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
-const isLoggedIn = require('../middlewares/authMiddleware'); // 세션확인용 미들웨어
+const {
+    isLoggedIn,
+    checkPostOwnership,
+} = require('../middlewares/authMiddleware'); // 세션확인용 미들웨어
 
 // 새롭게 작성한 글을 저장하는 라우터
-router.post('/', (req, res) => {
+router.post('/', isLoggedIn, (req, res) => {
     const { title, content } = req.body; // ejs에서 받아온 데이터 주입
     Post.create({
         title: title,
         content: content,
         likes: 0,
+        author: req.session.user._id, // 로그인한 유저의 아이디를 여기 저장
     })
         .then((newPost) => {
             console.log('성공적으로 저장 확인', newPost);
@@ -41,7 +45,9 @@ router.get('/', async (req, res) => {
     */
 
     try {
-        const postsFromDB = await Post.find().sort({ createdAt: -1 });
+        const postsFromDB = await Post.find()
+            .populate('author', 'userId') // author 필드를 참조해서 User모델의 userId 필드를 가져옴
+            .sort({ createdAt: -1 });
         // ----> await가 이렇게 편하다!
         res.render('posts/index', {
             postsFromDB: postsFromDB,
@@ -55,9 +61,10 @@ router.get('/', async (req, res) => {
 
 // 새로운 게시글 작성 페이지로 이동
 // --->>> isLogined 여기다가 넣었었음
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     // 로그인 된 사람만 이용 가능
     res.render('../views/new.ejs');
+    // res.render('posts/new'); // views 폴더 기준으로 경로를 써주는게 더 깔끔
 });
 
 // 게시글 상세 페이지를 보여주는 라우터
@@ -74,7 +81,11 @@ router.get('/:id', (req, res) => {
             }
             Comment.find({ post: id })
                 .then((comments) => {
-                    res.render('posts/show', { post, comments }); // 여기서 댓글이랑 같이 보낼 수 있음
+                    res.render('posts/show', {
+                        post,
+                        comments,
+                        sessionUser: req.session.user,
+                    }); // 여기서 댓글이랑 같이 보낼 수 있음
                 })
                 .catch((err) => {
                     console.log('뭔가 잘못됐음요;;', err);
@@ -88,7 +99,7 @@ router.get('/:id', (req, res) => {
 });
 
 // 삭제 라우터
-router.delete('/:id', (req, res) => {
+router.delete('/:id', isLoggedIn, checkPostOwnership, (req, res) => {
     const id = req.params.id;
     Post.findByIdAndDelete(id)
         .then((deletedPost) => {
@@ -106,7 +117,7 @@ router.delete('/:id', (req, res) => {
 });
 
 // 좋아요 버튼 눌렀을때 처리하는 라우터
-router.post('/:id/like', (req, res) => {
+router.post('/:id/like', isLoggedIn, (req, res) => {
     const id = req.params.id;
 
     Post.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true })
@@ -123,7 +134,7 @@ router.post('/:id/like', (req, res) => {
 });
 
 // 수정 페이지 보여주는 라우트
-router.get('/:id/edit', (req, res) => {
+router.get('/:id/edit', isLoggedIn, checkPostOwnership, (req, res) => {
     const id = req.params.id;
     // const post = posts[id];
 
@@ -143,7 +154,7 @@ router.get('/:id/edit', (req, res) => {
 });
 
 // 수정한 데이터를 반영하는 라우터
-router.put('/:id', (req, res) => {
+router.put('/:id', isLoggedIn, checkPostOwnership, (req, res) => {
     const id = req.params.id;
     const { title, content } = req.body;
 
