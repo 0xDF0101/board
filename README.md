@@ -7,21 +7,26 @@
 
 ## Log
 
--   게시글, 댓글에 게시자 id 나오게 함
+-   게시물 박스 아무데나 눌러도 상세페이지로 이동
+    -> 좋아요 버튼도 살려놓음
+    음
 
 ## 앞으로 구현할거 (해보고 싶은거)
 
-1. 사진 업로드 구현
-2. 홈 서버 구현해서 거기다 올리기
+1. 사진 업로드 구현 (⚠️ 근데 MongoDB 용량이 에바 작음)
+2. 홈 서버 구축해서 거기다 올리기 -> 에바 어려움
 
 ## stack
 
-HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
+기술 스택 : HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
+배포는 Render
 
 ## 그리고 영원한 동반자 ChatGPT
 
-이 프로젝트는 html/css, js 관련 지식 쬐끔 말고는
-모두 GPT선생님과 협업으로 진행되고 있습니다.
+이 프로젝트는 (html/css, js 관련 지식 쬐끔 말고는)
+모두 GPT 선생님과 협업으로 진행되고 있습니다.
+
+-   25.09.18일부로 Gemini 형님으로 넘어갔습니다. 꼬우면 잘 했어야지 GPT야
 
 ## 구조
 
