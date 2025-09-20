@@ -28,3 +28,9 @@ textarea.big-textarea {
     text-overflow: ellipsis;
     /* 💡 여기서는 white-space 속성을 사용하지 않아 충돌을 피함 */
 }
+.likeBtn {
+    /* z-index가 작동하려면 position 속성이 필요해 */
+    position: relative;
+    /* 숫자가 클수록 위로 올라옴 (투명 망토 링크보다 높은 값) */
+    z-index: 2;
+}

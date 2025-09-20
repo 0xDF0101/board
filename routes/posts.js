@@ -31,19 +31,6 @@ router.post('/', isLoggedIn, (req, res) => {
 
 // index.ejs에 게시글 목록 보여주는 라우터
 router.get('/', async (req, res) => {
-    /*
-    Post.find()
-        .sort({ createdAt: -1 }) // createdA을 기준으로 내림차순 정렬
-        .then((postsFromDB) => {
-            res.render('posts/index', { postsFromDB });
-        })
-        .catch((err) => {
-            console.log('DB에서렬데이터를 불러오지 못했습니다.', err);
-            res.status(500).send('DB 에러 발생');
-        });
-    // res.render('posts/index', { posts }); // 여기 부분
-    */
-
     try {
         const postsFromDB = await Post.find()
             .populate('author', 'userId') // author 필드를 참조해서 User모델의 userId 필드를 가져옴

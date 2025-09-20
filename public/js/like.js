@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     likeBtns.forEach((likeBtn) => {
         likeBtn.addEventListener('click', (event) => {
             event.preventDefault();
+            event.stopPropagation();
             const postId = likeBtn.dataset.id;
             const likeCountSpan = likeBtn.querySelector('.likeCount');
 
