@@ -31,11 +31,18 @@
       <ul class="list-group list-group-flush">
         <% comments.forEach((comment)=> { %>
           <li class="list-group-item d-flex justify-content-between">
-            <%= comment.content %>
-              <small class="text-muted ms-2">
-                <%= comment.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' , year: 'numeric' ,
-                  month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12:false}) %>
-              </small>
+            <div>
+              <% if(comment.author && comment.author.userId) { %>
+                <small class="text-muted"><strong>
+                    <%= comment.author.userId%>
+                  </strong></small>
+                <% } %>
+                  <%= comment.content %>
+                    <small class="text-muted ms-2">
+                      <%= comment.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' , year: 'numeric' ,
+                        month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12:false}) %>
+                    </small>
+            </div>
           </li>
 
           <% }) %>

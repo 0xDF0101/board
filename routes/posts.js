@@ -80,6 +80,7 @@ router.get('/:id', (req, res) => {
                     .send('해당 게시글을 찾을 수가 없습니다.');
             }
             Comment.find({ post: id })
+                .populate('author', 'userId')
                 .then((comments) => {
                     res.render('posts/show', {
                         post,
