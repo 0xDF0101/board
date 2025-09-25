@@ -71,6 +71,7 @@ router.post('/login', async (req, res) => {
             // 요청마다 얘를 확인하는거임
             _id: user._id,
             userId: user.userId,
+            role: user.role,
         };
         console.log('로그인 성공 : ', userId);
         console.log('현재 세션 : ', req.session);

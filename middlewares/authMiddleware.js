@@ -18,7 +18,11 @@ async function checkPostOwnership(req, res, next) {
             return res.status(404).send('게시글을 찾을 수 없습니다.');
         }
         // 글의 주인 id와 현재 로그인한 유저의 id가 같은지 확인
-        if (post.author.equals(req.session.user._id)) {
+        if (
+            req.session.user &&
+            (post.author.equals(req.session.user._id) ||
+                req.session.user.role === 'admin')
+        ) {
             next(); // 주인이 맞으면 통과!
         } else {
             res.status(403).send('권한이 없습니다.'); // 주인이 아니면 거절

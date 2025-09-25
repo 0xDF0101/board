@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema(
     {
         userId: { type: String, required: true, unique: true },
         userPw: { type: String, required: true },
+        role: {
+            type: String,
+            enum: ['user', 'admin'],
+            default: 'user', // 기본 값
+        },
     },
     {
         timestamps: true,
