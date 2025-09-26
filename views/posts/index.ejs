@@ -1,15 +1,17 @@
 <%- include('../partials/header', {title:'게시글 목록'}) %>
   <h1 class="mb-4">게시글 목록</h1>
-  <div class="d-flex justify-content-between">
+  <div class="d-flex">
     <% if(sessionUser) { %>
-      <a href="/posts/new" class="btn btn-primary mb-3">새 글 작성</a>
-      <span class="me-2">로그인 됨 : <strong>
+      <a href="/posts/new" class="btn btn-primary mb-3 me-2">새 글 작성</a>
+      <a href="/users/logout" class="btn btn-outline-danger mb-3 me-auto">로그아웃</a>
+      <span>Login : <span class="badge bg-success text-white">
           <%= sessionUser.userId %>
-        </strong></span>
-      <a href="/users/logout" class="btn btn-danger mb-3">로그아웃</a>
+        </span>
+      </span>
+
       <% } else { %>
         <div>
-          <a href="/users/login" class="btn btn-danger mb-3">로그인</a>
+          <a href="/users/login" class="btn btn-primary mb-3">로그인</a>
           <a href="/users/register" class="btn btn mb-3">회원가입</a>
         </div>
         <% } %>
@@ -48,9 +50,13 @@
                 <strong>
                   <%= post.author.userId %>
                 </strong>
-                <% } else { %>
-                  <strong>알 수 없음</strong>
-                  <% } %>
+
+                <% if(post.author.role==='admin' ) { %>
+                  <span class="badge rounded-pill bg-primary">관리자</span>
+                  <% } %> %>
+                    <% } else { %>
+                      <strong>알 수 없음</strong>
+                      <% } %>
             </small>
             <small class="text-muted">
               <%= post.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' , year: 'numeric' , month: '2-digit' ,

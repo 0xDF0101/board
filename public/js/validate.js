@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pwFeedback = document.getElementById('pwFeedback');
     // console.log('전송된 id', req.body.userId);
 
-    idFeedback.textContent = 'js파일이 잘 먹히고 있나?';
+    // idFeedback.textContent = 'js파일이 잘 먹히고 있나?';
 
     // id 중복 체크
     userIdInput.addEventListener('blur', async () => {

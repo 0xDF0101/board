@@ -33,7 +33,8 @@ router.post('/', isLoggedIn, (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const postsFromDB = await Post.find()
-            .populate('author', 'userId') // author 필드를 참조해서 User모델의 userId 필드를 가져옴
+            .populate('author', 'userId role') // author 필드를 참조해서 User모델의 userId 필드를 가져옴
+            // --> ref로 서로 참조하고 있기 때문에 다른 모델에서 관리해도 가져올 수 있음
             .sort({ createdAt: -1 });
         // ----> await가 이렇게 편하다!
         res.render('posts/index', {

@@ -14,8 +14,11 @@
       <input type="password" id="userPw" name="userPw" class="form-control" required />
       <small id="pwFeedback" class="text-danger"></small>
     </div>
-
-    <button type="submit" class="btn btn-primary">회원가입</button>
+    <div class="d-flex">
+      <button type="submit" class="btn btn-primary me-2">회원가입</button>
+      <a href="/users/login" class="btn btn-outline-primary me-auto me-auto">로그인</a>
+      <a href="/posts" class="btn btn-secondary">게시판</a>
+    </div>
   </form>
 
   <script src="/js/validate.js"></script>

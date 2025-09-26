@@ -10,17 +10,18 @@
   <p class="preserve-lines">
     <%= post.content.trim() %>
   </p>
-  <p>좋아요 갯수 : <%= post.likes%>
-  </p>
+  <button class="btn btn-sm btn-outline-danger likeBtn" data-id="<%= post._id %>">Like <span class="likeCount">
+      <%=post.likes %>
+    </span></button>
 
-
-  <!-- 버튼따리들  -->
-  <a href="/posts/<%= post._id %>/edit" class="btn btn-sm btn-outline-primary">수정</a>
-  <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
-    <button class="btn btn-sm btn-outline-danger" type="submit">삭제</button>
-  </form>
-  <a href="/posts" class="btn btn-sm btn-outline-secondary">← 목록으로 돌아가기</a>
-
+  <div style="margin-top:10px" class="d-flex">
+    <!-- 버튼따리들  -->
+    <a href="/posts/<%= post._id %>/edit" class="btn btn-sm btn-outline-primary me-2">수정</a>
+    <form action="/posts/<%= post._id %>?_method=DELETE" class="me-auto" method="POST" style="display:inline;">
+      <button class="btn btn-sm btn-outline-danger" type="submit">삭제</button>
+    </form>
+    <a href="/posts" class="btn btn-sm btn-outline-secondary">← 게시글</a>
+  </div>
 
   <hr>
   <!-- 기존 댓글 보여주기  -->
