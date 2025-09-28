@@ -32,10 +32,12 @@ router.post('/', isLoggedIn, (req, res) => {
 // index.ejs에 게시글 목록 보여주는 라우터
 router.get('/', async (req, res) => {
     try {
+        const limit = 16;
         const postsFromDB = await Post.find()
             .populate('author', 'userId role') // author 필드를 참조해서 User모델의 userId 필드를 가져옴
             // --> ref로 서로 참조하고 있기 때문에 다른 모델에서 관리해도 가져올 수 있음
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .limit(limit);
         // ----> await가 이렇게 편하다!
         res.render('posts/index', {
             postsFromDB: postsFromDB,
@@ -164,6 +166,29 @@ router.put('/:id', isLoggedIn, checkPostOwnership, (req, res) => {
             console.error('수정 중 에러', err);
             res.status(500).send('수정 중 오류가 발생했습니다.');
         });
+});
+
+// AJAX 요청용 새로운 라우터
+router.get('/api/posts', async (req, res) => {
+    try {
+        const page = parseInt(req.query.page || '1'); // 기본값 1페이지
+        const limit = 16; // 페이지 당 10개씩
+        const skip = (page - 1) * limit;
+
+        const posts = await Post.find()
+            .populate('author', 'userId role')
+            .sort({ createdAt: -1 })
+            .skip(skip) // 요만큼 건너뛰고
+            .limit(limit); // 요만큼 가져오기
+        const totalPosts = await Post.countDocuments(); // 전체 게시글 수 확인
+
+        res.json({
+            posts: posts,
+            totalPages: Math.ceil(totalPosts / limit),
+        });
+    } catch (err) {
+        res.status(500).json({ message: '서버 오류' });
+    }
 });
 
 module.exports = router;

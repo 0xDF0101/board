@@ -1,29 +1,28 @@
 <%- include('../partials/header', {title:'게시글 목록'}) %>
   <h1 class="mb-4">게시글 목록</h1>
-  <div class="d-flex">
-    <% if(sessionUser) { %>
-      <a href="/posts/new" class="btn btn-primary mb-3 me-2">새 글 작성</a>
-      <a href="/users/logout" class="btn btn-outline-danger mb-3 me-auto">로그아웃</a>
-      <span>Login : <span class="badge bg-success text-white">
-          <%= sessionUser.userId %>
-        </span>
-      </span>
 
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <% if(sessionUser) { %>
+      <div>
+        <a href="/posts/new" class="btn btn-primary">새 글 작성</a>
+        <a href="/users/logout" class="btn btn-outline-danger">로그아웃</a>
+      </div>
+      <span class="badge bg-success text-white p-2">
+        Login: <%= sessionUser.userId %>
+      </span>
       <% } else { %>
         <div>
-          <a href="/users/login" class="btn btn-primary mb-3">로그인</a>
-          <a href="/users/register" class="btn btn mb-3">회원가입</a>
+          <a href="/users/login" class="btn btn-primary">로그인</a>
+          <a href="/users/register" class="btn btn-outline-secondary">회원가입</a>
         </div>
         <% } %>
   </div>
-  <div class="row">
 
+  <div class="row" id="post-container">
     <% postsFromDB.forEach((post)=> { %>
-      <!-- <div class="col-md-6 mb-4"> -->
       <div class="col-12 col-md-6 mb-4">
         <div class="card h-100" style="position: relative;">
-          <div class="card-body d-flex flex-column flex-grow-1">
-
+          <div class="card-body d-flex flex-column">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h5 class="card-title">
                 <a href="/posts/<%= post._id %>" class="no-style-link stretched-link"><strong>
@@ -31,16 +30,16 @@
                   </strong></a>
               </h5>
             </div>
-
             <p class="card-text truncate-lines">
               <%= post.content.trim() %>
             </p>
-
             <div class="mt-auto">
-              <button class="btn btn-sm btn-outline-danger likeBtn" data-id="<%= post._id %>">Like <span
-                  class="likeCount">
+              <button class="btn btn-sm btn-outline-danger likeBtn" data-id="<%= post._id %>"
+                style="position: relative; z-index: 2;">
+                Like <span class="likeCount">
                   <%=post.likes %>
-                </span></button><br>
+                </span>
+              </button>
             </div>
           </div>
           <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
@@ -50,10 +49,9 @@
                 <strong>
                   <%= post.author.userId %>
                 </strong>
-
                 <% if(post.author.role==='admin' ) { %>
-                  <span class="badge rounded-pill bg-primary">관리자</span>
-                  <% } %> %>
+                  <span class="badge rounded-pill bg-primary ms-1">관리자</span>
+                  <% } %>
                     <% } else { %>
                       <strong>알 수 없음</strong>
                       <% } %>
@@ -68,6 +66,12 @@
       <% }) %>
   </div>
 
-  <script src="/js/like.js"></script>
+  <div id="loading" class="text-center my-4" style="display: none;">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
 
-  <%- include('../partials/footer', {includeLikeScript: true}) %>
+  <script src="/js/infiniteScroll.js"></script>
+
+  <%- include('../partials/footer') %>
