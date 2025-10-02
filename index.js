@@ -60,14 +60,18 @@ app.use(
 const postRoutes = require('./routes/posts'); // 라우터 불러오기
 // const { promiseImpl } = require('ejs');
 const { applyTimestamps } = require('./models/Post');
+// ---> 중괄호로 감싸져 있는 건, Post에서 applyTimestamps만 가져와서 쓰겠다는 의미
 // comment 관련 라우터
 const commentRoutes = require('./routes/comment');
 const userRoutes = require('./routes/user');
+// --> 구현해놓은 기능들을 require()로 가져와서 객체에 저장
 
 app.use('/comments', commentRoutes); // comments경로는 모두 담당
 app.use('/posts', postRoutes); // /posts 경로로 오는 것들은 posts 라우터로 싹 보냄
 app.use('/users', userRoutes);
+// ----> use()는 분기 역할을 한다!
 
+// 기본적인 요청 처리
 app.get('/', (req, res) => {
     res.redirect('/posts');
     // res.send('Hello, Anonymous Board');
