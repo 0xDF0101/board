@@ -21,12 +21,10 @@
 기술 스택 : HTML, CSS, AJAX, JavaScript, Node.js, Express.js, mongoDB
 배포는 Render
 
-## 그리고 영원한 동반자 ChatGPT
+## 그리고 Gemini
 
-이 프로젝트는 (html/css, js 관련 지식 쬐끔 말고는)
-모두 GPT 선생님과 협업으로 진행되고 있습니다.
-
--   25.09.18일부로 Gemini 형님으로 넘어갔습니다. 제미나이 만세
+이 프로젝트는 (html/css, js 관련 조금 말고는)
+제미나이를 통해서 공부하면서 찬찬히 진행되고 있읍니다
 
 ## 구조
 
@@ -59,4 +57,5 @@ anonymous-board/
 │ └─ validate.js # 프론트 유효성 검사(AJAX)
 └─ README.md
 ```
+
 
