@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // DB 연결
 // 로컬에서 돌릴땐 자동을 DEV용 DB로 전환됨 ---> 환경변수를 그렇게 설정해놨거든
+// ---> 배포 환경에서 환경 변수를 설정해줘야 함
 const isProduction = process.env.NODE_ENV === 'production';
 const mongoUri = isProduction
     ? process.env.MONGO_PROD_URI
@@ -29,11 +30,11 @@ mongoose
     .then(() =>
         // 만약 연결 성공하면 이걸 실행하고
         console.log(
-            `✅ MongoDB connected to ${isProduction ? 'Production' : 'Dev'} DB`
-        )
+            `✅ MongoDB connected to ${isProduction ? 'Production' : 'Dev'} DB`,
+        ),
     )
     .catch((err) => console.error('DB 연결 실패', err)); // 연결 실패하면 이걸 실행하는거임
-
+함;
 app.set('view engine', 'ejs'); // ejs를 view엔진으로 설정하는 듯?
 app.set('views', path.join(__dirname, 'views')); // 경로설정 하는 거인듯
 // __dirname : index.js 파일이 존재하는 폴더를 의미함!!
@@ -54,7 +55,7 @@ app.use(
         resave: false, // 요청이 왔을때, 세션에 변경 사항 없으면 저장x
         saveUninitialized: true, // 초기화되지 않은 세션을 저장할지 여부, 로그인하지 않은 유저에 대한 세션을 만들지 않음
         cookie: { maxAge: 1000 * 60 * 60 }, // 세션 유지 시간 : 1h
-    })
+    }),
 );
 
 const postRoutes = require('./routes/posts'); // 라우터 불러오기
