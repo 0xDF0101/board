@@ -15,7 +15,7 @@ router.post('/register', async (req, res) => {
     // ID 중복성 검사
     const existingUser = await User.findOne({ userId });
     if (existingUser) {
-        return res.status(400).send('이미 존재하는 아이디입니다.');
+        return res.status(409).send('이미 존재하는 아이디입니다.');
     }
 
     try {
