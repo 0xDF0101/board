@@ -33,13 +33,14 @@
             <p class="card-text truncate-lines">
               <%= post.content.trim() %>
             </p>
-            <div class="mt-auto">
+            <div class="mt-auto d-flex align-items-center gap-2">
               <button class="btn btn-sm btn-outline-danger likeBtn" data-id="<%= post._id %>"
                 style="position: relative; z-index: 2;">
                 Like <span class="likeCount">
                   <%=post.likes %>
                 </span>
               </button>
+              <small class="text-muted">댓글 <%= post.commentCount %></small>
             </div>
           </div>
           <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">

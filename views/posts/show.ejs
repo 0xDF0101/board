@@ -31,7 +31,7 @@
     <% } else { %>
       <ul class="list-group list-group-flush">
         <% comments.forEach((comment)=> { %>
-          <li class="list-group-item d-flex justify-content-between">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <% if(comment.author && comment.author.userId) { %>
                 <small class="text-muted"><strong>
@@ -44,6 +44,11 @@
                         month: '2-digit' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' , hour12:false}) %>
                     </small>
             </div>
+            <% if (sessionUser && comment.author && (comment.author._id.equals(sessionUser._id) || sessionUser.role === 'admin')) { %>
+              <form action="/comments/<%= post._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
+              </form>
+            <% } %>
           </li>
 
           <% }) %>

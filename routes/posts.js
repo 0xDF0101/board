@@ -38,9 +38,23 @@ router.get('/', async (req, res) => {
             // --> ref로 서로 참조하고 있기 때문에 다른 모델에서 관리해도 가져올 수 있음
             .sort({ createdAt: -1 })
             .limit(limit);
+
+        const postIds = postsFromDB.map(p => p._id);
+        const commentCounts = await Comment.aggregate([
+            { $match: { post: { $in: postIds } } },
+            { $group: { _id: '$post', count: { $sum: 1 } } },
+        ]);
+        const countMap = {};
+        commentCounts.forEach(c => { countMap[c._id.toString()] = c.count; });
+
+        const postsWithCounts = postsFromDB.map(p => ({
+            ...p.toObject(),
+            commentCount: countMap[p._id.toString()] || 0,
+        }));
+
         // ----> await가 이렇게 편하다!
         res.render('posts/index', {
-            postsFromDB: postsFromDB,
+            postsFromDB: postsWithCounts,
             sessionUser: req.session.user,
         }); // DB -> ejs로 post넘겨줌
     } catch (err) {
@@ -182,8 +196,21 @@ router.get('/api/posts', async (req, res) => {
             .limit(limit); // 요만큼 가져오기
         const totalPosts = await Post.countDocuments(); // 전체 게시글 수 확인
 
+        const postIds = posts.map(p => p._id);
+        const commentCounts = await Comment.aggregate([
+            { $match: { post: { $in: postIds } } },
+            { $group: { _id: '$post', count: { $sum: 1 } } },
+        ]);
+        const countMap = {};
+        commentCounts.forEach(c => { countMap[c._id.toString()] = c.count; });
+
+        const postsWithCounts = posts.map(p => ({
+            ...p.toObject(),
+            commentCount: countMap[p._id.toString()] || 0,
+        }));
+
         res.json({
-            posts: posts,
+            posts: postsWithCounts,
             totalPages: Math.ceil(totalPosts / limit),
         });
     } catch (err) {

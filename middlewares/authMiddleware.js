@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 
 // 세션 검사하는 미들웨어
 
@@ -33,7 +34,30 @@ async function checkPostOwnership(req, res, next) {
     }
 }
 
+// 현재 로그인한 유저가 이 댓글의 주인인지 확인하는 미들웨어
+async function checkCommentOwnership(req, res, next) {
+    try {
+        const comment = await Comment.findById(req.params.commentId);
+        if (!comment) {
+            return res.status(404).send('댓글을 찾을 수 없습니다.');
+        }
+        if (
+            req.session.user &&
+            (comment.author.equals(req.session.user._id) ||
+                req.session.user.role === 'admin')
+        ) {
+            next();
+        } else {
+            res.status(403).send('권한이 없습니다.');
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('서버 오류');
+    }
+}
+
 module.exports = {
-    isLoggedIn, // 외부에서 사용할 수 있게 함
+    isLoggedIn,
     checkPostOwnership,
+    checkCommentOwnership,
 };

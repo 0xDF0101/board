@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Comment = require('../models/Comment');
-const { isLoggedIn } = require('../middlewares/authMiddleware');
+const { isLoggedIn, checkCommentOwnership } = require('../middlewares/authMiddleware');
 
 // 댓글 작성
 router.post('/:id/comments', isLoggedIn, (req, res) => {
@@ -22,6 +22,20 @@ router.post('/:id/comments', isLoggedIn, (req, res) => {
         .catch((err) => {
             console.log('댓글 저장이 안됐음!!!!', err);
             res.status(500).send('서버 에러 발생');
+        });
+});
+
+// 댓글 삭제
+router.delete('/:id/comments/:commentId', isLoggedIn, checkCommentOwnership, (req, res) => {
+    const { id, commentId } = req.params;
+
+    Comment.findByIdAndDelete(commentId)
+        .then(() => {
+            res.redirect(`/posts/${id}`);
+        })
+        .catch((err) => {
+            console.log('댓글 삭제 실패', err);
+            res.status(500).send('서버 오류');
         });
 });
 

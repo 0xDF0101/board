@@ -34,7 +34,6 @@ mongoose
         ),
     )
     .catch((err) => console.error('DB 연결 실패', err)); // 연결 실패하면 이걸 실행하는거임
-함;
 app.set('view engine', 'ejs'); // ejs를 view엔진으로 설정하는 듯?
 app.set('views', path.join(__dirname, 'views')); // 경로설정 하는 거인듯
 // __dirname : index.js 파일이 존재하는 폴더를 의미함!!
