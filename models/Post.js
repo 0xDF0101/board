@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema(
     {
         title: { type: String, required: true },
         content: String,
-        likes: { type: Number, default: 0 },
+        likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         author: {
             // 로그인 관련
             type: mongoose.Schema.Types.ObjectId,

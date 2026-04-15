@@ -1,3 +1,6 @@
+/* =============================================
+   Base / Utility
+   ============================================= */
 a.no-style-link {
     color: inherit;
     text-decoration: none;
@@ -12,25 +15,425 @@ textarea.big-textarea {
     height: 200px;
 }
 
-/* ... 다른 CSS 코드 ... */
-
-/* 👇 '줄바꿈 유지' 기능만 담당하는 클래스 */
 .preserve-lines {
     white-space: pre-wrap;
 }
 
-/* 👇 '내용 자르기' 기능만 담당하는 클래스 */
 .truncate-lines {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3; /* 3줄로 제한 */
+    -webkit-line-clamp: 3;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* 💡 여기서는 white-space 속성을 사용하지 않아 충돌을 피함 */
 }
-.likeBtn {
-    /* z-index가 작동하려면 position 속성이 필요해 */
+
+/* =============================================
+   Shared Buttons
+   ============================================= */
+.feed-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: none;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1.4;
+}
+
+.feed-btn-dark {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+}
+.feed-btn-dark:hover {
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+}
+
+.feed-btn-ghost {
+    background: transparent;
+    border-color: #ddd;
+    color: #444;
+}
+.feed-btn-ghost:hover {
+    background: #f5f5f5;
+    color: #222;
+    text-decoration: none;
+}
+
+.feed-btn-danger {
+    background: transparent;
+    border-color: #f5c0c0;
+    color: #c0392b;
+}
+.feed-btn-danger:hover {
+    background: #fef5f5;
+    color: #a93226;
+}
+
+/* =============================================
+   Feed Topbar
+   ============================================= */
+.feed-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0 18px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 28px;
+}
+
+.feed-brand {
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #111;
+}
+
+.feed-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.feed-user-badge {
+    font-size: 0.8125rem;
+    color: #555;
+    font-weight: 600;
+}
+
+/* =============================================
+   Feed Grid
+   ============================================= */
+.feed-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .feed-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* =============================================
+   Feed Card
+   ============================================= */
+.feed-card {
+    background: #fff;
+    border: 1px solid #efefef;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.18s;
+}
+.feed-card:hover {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+.feed-card-img-link {
+    display: block;
+    text-decoration: none;
+}
+
+/* Gray placeholder — same aspect ratio as Instagram squares */
+.feed-card-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f0f0f0;
+}
+
+.feed-card-body {
+    padding: 12px 14px 14px;
+}
+
+.feed-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.feed-author {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.feed-admin-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    background: #3897f0;
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.feed-time {
+    font-size: 0.72rem;
+    color: #aaa;
+}
+
+.feed-card-title {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111;
+    text-decoration: none;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.feed-card-title:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.feed-card-content {
+    font-size: 0.8125rem;
+    color: #555;
+    margin-bottom: 10px;
+    line-height: 1.55;
+}
+
+.feed-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 9px;
+    border-top: 1px solid #f5f5f5;
+}
+
+.feed-like-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.8125rem;
+    color: #555;
+    cursor: pointer;
     position: relative;
-    /* 숫자가 클수록 위로 올라옴 (투명 망토 링크보다 높은 값) */
     z-index: 2;
+}
+.feed-like-btn:hover {
+    color: #e0374a;
+}
+
+.feed-comment-count {
+    font-size: 0.8125rem;
+    color: #999;
+}
+
+.feed-loading {
+    text-align: center;
+    padding: 28px 0;
+}
+
+/* =============================================
+   Post Detail — Wrapper
+   ============================================= */
+.post-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding-bottom: 60px;
+}
+
+.post-nav {
+    margin-bottom: 16px;
+}
+
+/* =============================================
+   Post Detail — Card
+   ============================================= */
+.post-card {
+    background: #fff;
+    border: 1px solid #efefef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.post-img-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f0f0f0;
+}
+
+.post-card-body {
+    padding: 16px;
+}
+
+.post-author-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.post-author-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ddd;
+    flex-shrink: 0;
+}
+
+.post-author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+
+.post-author-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.post-time {
+    font-size: 0.72rem;
+    color: #aaa;
+}
+
+.post-owner-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.post-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 10px;
+}
+
+.post-content {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f5f5f5;
+}
+
+/* =============================================
+   Comments Section
+   ============================================= */
+.comments-section {
+    background: #fff;
+    border: 1px solid #efefef;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.comments-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 12px;
+}
+
+.comments-empty {
+    font-size: 0.875rem;
+    color: #bbb;
+    text-align: center;
+    padding: 12px 0;
+    margin: 0;
+}
+
+.comments-list {
+    margin-bottom: 4px;
+}
+
+.comment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.comment-author {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.comment-content {
+    font-size: 0.875rem;
+    color: #333;
+    word-break: break-word;
+}
+
+.comment-time {
+    font-size: 0.72rem;
+    color: #c0c0c0;
+}
+
+.comment-delete-btn {
+    background: none;
+    border: none;
+    font-size: 0.75rem;
+    color: #c0392b;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.comment-delete-btn:hover {
+    background: #fef5f5;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid #efefef;
+    margin-top: 4px;
+}
+
+.comment-input {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 9px 11px;
+    font-size: 0.875rem;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+}
+.comment-input:focus {
+    border-color: #aaa;
 }

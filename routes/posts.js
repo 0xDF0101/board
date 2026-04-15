@@ -14,7 +14,6 @@ router.post('/', isLoggedIn, (req, res) => {
     Post.create({
         title: title,
         content: content,
-        likes: 0,
         author: req.session.user._id, // 로그인한 유저의 아이디를 여기 저장
     })
         .then((newPost) => {
@@ -50,6 +49,7 @@ router.get('/', async (req, res) => {
         const postsWithCounts = postsFromDB.map(p => ({
             ...p.toObject(),
             commentCount: countMap[p._id.toString()] || 0,
+            likes: (p.likes || []).length,
         }));
 
         // ----> await가 이렇게 편하다!
@@ -71,6 +71,23 @@ router.get('/new', isLoggedIn, (req, res) => {
     // res.render('posts/new'); // views 폴더 기준으로 경로를 써주는게 더 깔끔
 });
 
+// 현재 유저가 좋아요 누른 게시글 id 목록 반환 (like.js 초기 상태용)
+router.get('/api/liked', (req, res) => {
+    if (!req.session.user) {
+        return res.json({ likedIds: [] });
+    }
+    const ids = (req.query.ids || '').split(',').filter(Boolean);
+    if (ids.length === 0) {
+        return res.json({ likedIds: [] });
+    }
+    const userId = req.session.user._id;
+    Post.find({ _id: { $in: ids }, likes: userId }, '_id')
+        .then((posts) => {
+            res.json({ likedIds: posts.map(p => p._id.toString()) });
+        })
+        .catch(() => res.json({ likedIds: [] }));
+});
+
 // 게시글 상세 페이지를 보여주는 라우터
 router.get('/:id', (req, res) => {
     const id = req.params.id; // 링크에 걸린 _id 땡겨오기
@@ -86,8 +103,9 @@ router.get('/:id', (req, res) => {
             Comment.find({ post: id })
                 .populate('author', 'userId')
                 .then((comments) => {
+                    const postData = { ...post.toObject(), likes: (post.likes || []).length };
                     res.render('posts/show', {
-                        post,
+                        post: postData,
                         comments,
                         sessionUser: req.session.user,
                     }); // 여기서 댓글이랑 같이 보낼 수 있음
@@ -124,17 +142,31 @@ router.delete('/:id', isLoggedIn, checkPostOwnership, (req, res) => {
 // 좋아요 버튼 눌렀을때 처리하는 라우터
 router.post('/:id/like', isLoggedIn, (req, res) => {
     const id = req.params.id;
+    const userId = req.session.user._id;
 
-    Post.findByIdAndUpdate(id, { $inc: { likes: 1 } }, { new: true })
-        .then((updatePost) => {
-            if (!updatePost) {
-                return res.status(404).send('해당 게시글을 찾지 못했습니다.');
+    Post.findById(id)
+        .then((post) => {
+            if (!post) {
+                res.status(404).json({ message: '해당 게시글을 찾지 못했습니다.' });
+                return null;
             }
-            res.json({ likes: updatePost.likes });
+            if (!Array.isArray(post.likes)) post.likes = [];
+            const alreadyLiked = post.likes.some(uid => uid.equals(userId));
+            if (alreadyLiked) {
+                post.likes.pull(userId);
+            } else {
+                post.likes.push(userId);
+            }
+            return post.save();
+        })
+        .then((updatedPost) => {
+            if (!updatedPost) return;
+            const liked = updatedPost.likes.some(uid => uid.equals(userId));
+            res.json({ liked, count: updatedPost.likes.length });
         })
         .catch((err) => {
             console.error('서버 오류', err);
-            res.status(500).send('어류가 발생했습니다.');
+            res.status(500).send('오류가 발생했습니다.');
         });
 });
 
@@ -207,6 +239,7 @@ router.get('/api/posts', async (req, res) => {
         const postsWithCounts = posts.map(p => ({
             ...p.toObject(),
             commentCount: countMap[p._id.toString()] || 0,
+            likes: (p.likes || []).length,
         }));
 
         res.json({
