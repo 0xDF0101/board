@@ -10,3 +10,4 @@ node_modules/
 # 로그 파일
 npm-debug.log
 
+.idea/
