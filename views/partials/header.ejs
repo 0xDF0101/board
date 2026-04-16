@@ -4,17 +4,55 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>
         <%= title || "익명 게시판" %>
     </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
-    <meta property="og:title" content="영일구를 위한 게시판">
-    <meta property="og:description" content="적극적인 참여로 유진비의 공부를 도와주세요">
-    <meta property="og:image" content="/img/main_img.jpg">
 </head>
 
 <body>
-    <div class="container my-4">
+
+<header class="ig-header">
+  <nav class="ig-nav">
+
+    <div class="ig-nav-side">
+      <a href="/posts" class="ig-icon-btn" title="홈">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </a>
+    </div>
+
+    <div>
+      <a href="/posts" class="ig-logo">Board</a>
+    </div>
+
+    <div class="ig-nav-side ig-nav-right">
+      <% if (typeof sessionUser !== 'undefined' && sessionUser) { %>
+        <a href="/posts/new" class="ig-icon-btn" title="새 글 작성">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+        </a>
+        <a href="/users/logout" class="ig-icon-btn" title="@<%= sessionUser.userId %> 로그아웃">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </a>
+      <% } else { %>
+        <a href="/users/login" class="ig-nav-text-btn ig-nav-text-btn--outline">로그인</a>
+        <a href="/users/register" class="ig-nav-text-btn ig-nav-text-btn--primary">회원가입</a>
+      <% } %>
+    </div>
+
+  </nav>
+</header>
+
+<main class="ig-page">

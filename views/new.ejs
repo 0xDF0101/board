@@ -1,11 +1,23 @@
 <%- include('partials/header', {title:"새로운 글 작성"}) %>
 
-
-    <h1>새 글 작성</h1>
+<div class="ig-form-wrap">
+  <div class="ig-form-card">
+    <h1 class="ig-form-title">새 글 작성</h1>
     <form action="/posts" method="POST">
-        <input type="text" style="width:100%" name="title" placeholder="제목" required><br><br>
-        <textarea name="content" class="big-textarea" placeholder="내용" required></textarea><br><br>
-        <button type="submit" class="btn btn-primary">작성</button>
+      <div class="ig-field">
+        <label class="ig-field-label" for="title">제목</label>
+        <input type="text" id="title" name="title" class="ig-input" placeholder="제목을 입력하세요" required>
+      </div>
+      <div class="ig-field">
+        <label class="ig-field-label" for="content">내용</label>
+        <textarea id="content" name="content" class="ig-textarea" placeholder="내용을 입력하세요" required></textarea>
+      </div>
+      <div class="ig-form-actions">
+        <button type="submit" class="ig-btn ig-btn--primary">작성하기</button>
+        <a href="/posts" class="ig-btn ig-btn--ghost">취소</a>
+      </div>
     </form>
+  </div>
+</div>
 
-    <%- include('partials/footer') %>
+<%- include('partials/footer') %>

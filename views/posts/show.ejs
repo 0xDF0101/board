@@ -1,72 +1,80 @@
 <%- include('../partials/header', {title: post.title}) %>
 
-<div class="post-wrap">
+<div class="ig-post-wrap">
 
-  <div class="post-nav">
-    <a href="/posts" class="feed-btn feed-btn-ghost">← 목록으로</a>
-  </div>
+  <a href="/posts" class="ig-post-back">
+    <svg viewBox="0 0 24 24">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    목록으로
+  </a>
 
-  <!-- 게시글 카드 -->
-  <div class="post-card">
-    <div class="post-img-placeholder"></div>
-    <div class="post-card-body">
+  <div class="ig-post-card">
 
-      <div class="post-author-row">
-        <div class="post-author-avatar"></div>
-        <div class="post-author-info">
-          <span class="post-author-name">
-            <% if (post.author && post.author.userId) { %>
-              @<%= post.author.userId %>
-            <% } else { %>
-              @알 수 없음
-            <% } %>
-          </span>
-          <span class="post-time">
-            <%= post.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) %>
-          </span>
-        </div>
-        <div class="post-owner-actions">
-          <a href="/posts/<%= post._id %>/edit" class="feed-btn feed-btn-ghost">수정</a>
+    <div class="ig-post-card-head">
+      <div class="ig-avatar-md"></div>
+      <div class="ig-post-user">
+        <span class="ig-post-username">
+          <% if (post.author && post.author.userId) { %>
+            @<%= post.author.userId %>
+          <% } else { %>
+            @알 수 없음
+          <% } %>
+        </span>
+        <span class="ig-post-time">
+          <%= post.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) %>
+        </span>
+      </div>
+      <% if (sessionUser && post.author && (post.author._id.equals(sessionUser._id) || sessionUser.role === 'admin')) { %>
+        <div class="ig-post-owner-btns">
+          <a href="/posts/<%= post._id %>/edit" class="ig-btn ig-btn--ghost ig-btn--sm">수정</a>
           <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display:inline;">
-            <button class="feed-btn feed-btn-danger" type="submit">삭제</button>
+            <button class="ig-btn ig-btn--danger ig-btn--sm" type="submit">삭제</button>
           </form>
         </div>
-      </div>
+      <% } %>
+    </div>
 
-      <h2 class="post-title"><%= post.title %></h2>
-      <p class="post-content preserve-lines"><%= post.content.trim() %></p>
+    <div class="ig-post-img"></div>
 
-      <div class="post-actions">
-        <button class="feed-like-btn likeBtn" data-id="<%= post._id %>">
-          Like <span class="likeCount"><%= post.likes %></span>
+    <div class="ig-post-card-body">
+      <div class="ig-post-actions">
+        <button class="ig-like-btn likeBtn" data-id="<%= post._id %>">
+          <svg viewBox="0 0 24 24">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span class="likeCount"><%= post.likes %></span>
         </button>
       </div>
 
+      <h1 class="ig-post-title"><%= post.title %></h1>
+      <div class="ig-post-content preserve-lines"><%= post.content.trim() %></div>
     </div>
+
   </div>
 
-  <!-- 댓글 섹션 -->
-  <div class="comments-section">
-    <h3 class="comments-title">댓글 <%= comments.length %></h3>
+  <div class="ig-comments">
+    <div class="ig-comments-head">댓글 <%= comments.length %></div>
 
     <% if (comments.length === 0) { %>
-      <p class="comments-empty">아직 댓글이 없습니다.</p>
+      <p class="ig-comment-empty">아직 댓글이 없습니다.</p>
     <% } else { %>
-      <div class="comments-list">
+      <div class="ig-comments-list">
         <% comments.forEach((comment) => { %>
-          <div class="comment-item">
-            <div class="comment-body">
+          <div class="ig-comment-item">
+            <div class="ig-comment-body">
               <% if (comment.author && comment.author.userId) { %>
-                <span class="comment-author">@<%= comment.author.userId %></span>
+                <span class="ig-comment-author">@<%= comment.author.userId %></span>
               <% } %>
-              <span class="comment-content"><%= comment.content %></span>
-              <span class="comment-time">
+              <span class="ig-comment-text"><%= comment.content %></span>
+              <span class="ig-comment-time">
                 <%= comment.createdAt.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) %>
               </span>
             </div>
             <% if (sessionUser && comment.author && (comment.author._id.equals(sessionUser._id) || sessionUser.role === 'admin')) { %>
               <form action="/comments/<%= post._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline;">
-                <button type="submit" class="comment-delete-btn">삭제</button>
+                <button type="submit" class="ig-comment-del">삭제</button>
               </form>
             <% } %>
           </div>
@@ -74,21 +82,19 @@
       </div>
     <% } %>
 
-    <!-- 댓글 작성 -->
     <% if (sessionUser) { %>
-      <form class="comment-form" action="/comments/<%= post._id %>/comments" method="POST">
-        <textarea name="content" class="comment-input" rows="2" required placeholder="댓글을 입력하세요"></textarea>
-        <div style="text-align:right;">
-          <button type="submit" class="feed-btn feed-btn-dark">작성</button>
-        </div>
+      <form class="ig-comment-form" action="/comments/<%= post._id %>/comments" method="POST">
+        <textarea name="content" class="ig-comment-input" rows="2" required placeholder="댓글 달기..."></textarea>
+        <button type="submit" class="ig-comment-submit">게시</button>
       </form>
     <% } else { %>
-      <p class="comments-empty">
-        <a href="/users/login" class="no-style-link" style="color:#3897f0;">로그인</a> 후 댓글을 작성할 수 있습니다.
+      <p class="ig-login-hint">
+        <a href="/users/login">로그인</a>하여 댓글을 달아보세요.
       </p>
     <% } %>
   </div>
 
 </div>
 
+<script src="/js/like.js"></script>
 <%- include('../partials/footer') %>

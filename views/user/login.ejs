@@ -1,23 +1,33 @@
 <%- include('../partials/header', {title:'로그인'}) %>
 
-    <h1>로그인</h1>
+<div class="ig-auth-page">
+
+  <div class="ig-auth-card">
+    <div class="ig-auth-logo">
+      <span class="ig-auth-logo-text">Board</span>
+    </div>
 
     <form action="/users/login" method="POST">
-        <div class="mb-3">
-            <label for="userId" class="form-label">아이디</label>
-            <input type="text" id="userId" name="userId" class="form-control" required />
-        </div>
-        <div class="mb-3">
-            <label for="userPw" class="form-label">비밀번호</label>
-            <input type="password" id="userPw" name="userPw" class="form-control" required />
-        </div>
-
-        <div class="d-flex">
-            <button type="submit" class="btn btn-primary me-2">로그인</button>
-            <a href="/users/register" class="btn btn-outline-primary me-auto">회원가입</a>
-            <a href="/posts" class="btn btn-secondary">게시판</a>
-        </div>
+      <div class="ig-auth-field">
+        <input type="text" id="userId" name="userId" class="ig-auth-input" placeholder="아이디" required autocomplete="username" />
+      </div>
+      <div class="ig-auth-field">
+        <input type="password" id="userPw" name="userPw" class="ig-auth-input" placeholder="비밀번호" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="ig-auth-submit">로그인</button>
     </form>
 
+    <div class="ig-auth-divider">또는</div>
 
-    <%- include('../partials/footer') %>
+    <p style="text-align:center; font-size:14px;">
+      <a href="/posts" style="color:#0095f6; font-weight:600;">게시판 바로가기</a>
+    </p>
+  </div>
+
+  <div class="ig-auth-switch">
+    계정이 없으신가요? <a href="/users/register">회원가입</a>
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>
