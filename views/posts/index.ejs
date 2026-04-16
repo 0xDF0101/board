@@ -14,7 +14,20 @@
   </div>
 </div>
 
-<div class="feed-grid" id="post-container">
+<div class="feed-search-bar">
+  <form action="/posts" method="GET" class="feed-search-form">
+    <input type="text" name="q" value="<%= q %>" placeholder="제목 또는 내용 검색..." class="feed-search-input" />
+    <button type="submit" class="feed-btn feed-btn-dark">검색</button>
+    <% if (q) { %>
+      <a href="/posts" class="feed-btn feed-btn-ghost">초기화</a>
+    <% } %>
+  </form>
+</div>
+
+<div class="feed-grid" id="post-container" data-q="<%= q %>">
+  <% if (postsFromDB.length === 0 && q) { %>
+    <p class="feed-empty-message">검색 결과가 없습니다.</p>
+  <% } %>
   <% postsFromDB.forEach((post) => { %>
     <div class="feed-card">
       <a href="/posts/<%= post._id %>" class="feed-card-img-link">

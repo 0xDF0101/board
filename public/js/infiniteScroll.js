@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let page = 1;
     let isLoading = false;
     let hasMore = true;
+    const q = postContainer.dataset.q || '';
 
     // 좋아요 버튼 이벤트 위임 (새로 생긴 카드에서도 작동하도록)
     postContainer.addEventListener('click', function (event) {
@@ -38,7 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
         page++;
 
         try {
-            const response = await fetch(`/posts/api/posts?page=${page}`);
+            const url = q ? `/posts/api/posts?page=${page}&q=${encodeURIComponent(q)}` : `/posts/api/posts?page=${page}`;
+            const response = await fetch(url);
             const data = await response.json();
 
             if (data.posts && data.posts.length > 0) {
