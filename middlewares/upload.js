@@ -24,7 +24,7 @@ async function uploadToMinio(file) {
         'Content-Type': file.mimetype,
     });
 
-    return `http://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucket}/${filename}`;
+    return `${process.env.MINIO_PUBLIC_URL}/${bucket}/${filename}`;
 }
 
 module.exports = { upload, uploadToMinio };
