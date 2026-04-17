@@ -1,8 +1,8 @@
 services:
-  board:
-    build: .
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    restart: unless-stopped
+    board:
+        build: .
+        ports:
+            - '9080:3000'
+        env_file:
+            - .env
+        restart: unless-stopped
