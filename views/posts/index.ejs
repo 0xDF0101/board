@@ -37,7 +37,11 @@
         </div>
 
         <a href="/posts/<%= post._id %>" class="ig-card-img-wrap">
-          <div class="ig-card-img"></div>
+          <% if (post.imageUrl) { %>
+            <img src="<%= post.imageUrl %>" alt="post image" class="ig-card-img" style="width:100%;height:100%;object-fit:cover;">
+          <% } else { %>
+            <div class="ig-card-img" style="background:#d3d3d3;"></div>
+          <% } %>
         </a>
 
         <div class="ig-card-actions">

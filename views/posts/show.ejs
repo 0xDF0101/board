@@ -36,7 +36,11 @@
       <% } %>
     </div>
 
-    <div class="ig-post-img"></div>
+    <% if (post.imageUrl) { %>
+      <img src="<%= post.imageUrl %>" alt="post image" class="ig-post-img" style="width:100%;object-fit:cover;">
+    <% } else { %>
+      <div class="ig-post-img" style="background:#d3d3d3;"></div>
+    <% } %>
 
     <div class="ig-post-card-body">
       <div class="ig-post-actions">

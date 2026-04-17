@@ -7,15 +7,25 @@ const {
     isLoggedIn,
     checkPostOwnership,
 } = require('../middlewares/authMiddleware'); // 세션확인용 미들웨어
+const { upload, uploadToMinio } = require('../middlewares/upload');
 
 // 새롭게 작성한 글을 저장하는 라우터
-router.post('/', isLoggedIn, (req, res) => {
+router.post('/', isLoggedIn, upload.single('image'), (req, res) => {
     const { title, content } = req.body; // ejs에서 받아온 데이터 주입
-    Post.create({
+    const postData = {
         title: title,
         content: content,
         author: req.session.user._id, // 로그인한 유저의 아이디를 여기 저장
-    })
+    };
+
+    const savePost = req.file
+        ? uploadToMinio(req.file).then((imageUrl) => {
+              postData.imageUrl = imageUrl;
+              return Post.create(postData);
+          })
+        : Post.create(postData);
+
+    savePost
         .then((newPost) => {
             console.log('성공적으로 저장 확인', newPost);
             res.redirect('/posts');
@@ -24,8 +34,6 @@ router.post('/', isLoggedIn, (req, res) => {
             console.log('에러 발생', err);
             res.status(500).send('서버 에러 발생');
         });
-    // posts.push({ title, content, likes: 0 }); // 여기 부분
-    // console.log('현재 게시글 목록:', posts);
 });
 
 // index.ejs에 게시글 목록 보여주는 라우터

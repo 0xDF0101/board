@@ -15,6 +15,7 @@ const postSchema = new mongoose.Schema(
             ref: 'User', // User 모델 참조 --> join과 같은 개념이라고 할 수 있다!
             require: true,
         },
+        imageUrl: { type: String, default: '' },
     },
     {
         // 생성 시간과 마지막 수정 시간을 자동으로 관리해줌
