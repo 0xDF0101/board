@@ -28,6 +28,7 @@ router.post('/', isLoggedIn, upload.single('image'), (req, res) => {
     savePost
         .then((newPost) => {
             console.log('성공적으로 저장 확인', newPost);
+            console.log('imageUrl:', newPost.imageUrl);
             res.redirect('/posts');
         })
         .catch((err) => {
