@@ -1,0 +1,36 @@
+<%- include('../partials/header') %>
+
+<div class="ig-auth-page">
+  <div class="ig-auth-card" style="max-width: 480px;">
+
+    <div style="display:flex; align-items:center; gap:24px; margin-bottom:28px;">
+      <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); flex-shrink:0;"></div>
+      <div>
+        <div style="font-size:20px; font-weight:700; color:#262626; margin-bottom:4px;">
+          <%= user.nickname || user.userId %>
+        </div>
+        <div style="font-size:14px; color:#8e8e8e;">@<%= user.userId %></div>
+      </div>
+    </div>
+
+    <hr style="border:none; border-top:1px solid #dbdbdb; margin-bottom:24px;">
+
+    <div style="font-size:12px; font-weight:600; color:#8e8e8e; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px;">닉네임 변경</div>
+
+    <form action="/users/mypage/nickname" method="POST" style="display:flex; gap:8px; align-items:center;">
+      <input
+        type="text"
+        name="nickname"
+        class="ig-auth-input"
+        placeholder="새 닉네임 (2~10자)"
+        value="<%= user.nickname || '' %>"
+        maxlength="10"
+        style="flex:1; margin:0;"
+      >
+      <button type="submit" class="ig-auth-submit" style="width:auto; margin:0; padding:9px 18px; white-space:nowrap;">변경</button>
+    </form>
+
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
