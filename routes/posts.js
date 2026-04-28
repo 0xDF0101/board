@@ -108,6 +108,7 @@ router.get('/:id', (req, res) => {
     // comment 관련해서는 어떡하지?
 
     Post.findById(id)
+        .populate('author', 'userId')
         .then((post) => {
             if (!post) {
                 return res
