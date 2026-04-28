@@ -41,4 +41,31 @@ async function uploadToMinio(file) {
     return `${process.env.MINIO_PUBLIC_URL}/${bucket}/${filename}`;
 }
 
-module.exports = { upload, uploadToMinio };
+async function uploadProfileImage(file, userId) {
+    const client = getMinioClient();
+    const ext = path.extname(file.originalname);
+    const filename = `profile_${userId}_${Date.now()}${ext}`;
+    const bucket = process.env.MINIO_BUCKET;
+
+    const exists = await client.bucketExists(bucket);
+    if (!exists) {
+        await client.makeBucket(bucket);
+        await client.setBucketPolicy(bucket, JSON.stringify({
+            Version: '2012-10-17',
+            Statement: [{
+                Effect: 'Allow',
+                Principal: { AWS: ['*'] },
+                Action: ['s3:GetObject'],
+                Resource: [`arn:aws:s3:::${bucket}/*`],
+            }],
+        }));
+    }
+
+    await client.putObject(bucket, filename, file.buffer, file.size, {
+        'Content-Type': file.mimetype,
+    });
+
+    return `${process.env.MINIO_PUBLIC_URL}/${bucket}/${filename}`;
+}
+
+module.exports = { upload, uploadToMinio, uploadProfileImage };

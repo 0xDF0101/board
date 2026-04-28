@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User'); // 사용자 모델을 불러옴
 const bcrypt = require('bcrypt');
 const { isLoggedIn } = require('../middlewares/authMiddleware');
+const { upload, uploadProfileImage } = require('../middlewares/upload');
 
 // 회원가입 페이지 보여주기
 router.get('/register', (req, res) => {
@@ -122,6 +123,23 @@ router.post('/mypage/nickname', isLoggedIn, async (req, res) => {
         res.redirect('/users/mypage');
     } catch (err) {
         console.error('닉네임 변경 실패', err);
+        res.status(500).send('서버 오류');
+    }
+});
+
+// 프로필 이미지 변경
+router.post('/mypage/profile-image', isLoggedIn, upload.single('profileImage'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('파일이 없습니다.');
+    }
+    try {
+        const user = await User.findById(req.session.user._id);
+        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+        user.profileImage = await uploadProfileImage(req.file, user.userId);
+        await user.save();
+        res.redirect('/users/mypage');
+    } catch (err) {
+        console.error('프로필 이미지 변경 실패', err);
         res.status(500).send('서버 오류');
     }
 });

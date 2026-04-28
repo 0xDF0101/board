@@ -4,11 +4,18 @@
   <div class="ig-auth-card" style="max-width: 480px;">
 
     <div style="display:flex; align-items:center; gap:24px; margin-bottom:28px;">
-      <% if (user.profileImage) { %>
-        <img src="<%= user.profileImage %>" class="ig-avatar" style="width:80px;height:80px;" alt="avatar">
-      <% } else { %>
-        <div class="ig-avatar-default" style="width:80px;height:80px;font-size:28px;"><%= user.userId.charAt(0).toUpperCase() %></div>
-      <% } %>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <% if (user.profileImage) { %>
+          <img src="<%= user.profileImage %>" class="ig-avatar" style="width:80px;height:80px;" alt="avatar">
+        <% } else { %>
+          <div class="ig-avatar-default" style="width:80px;height:80px;font-size:28px;"><%= user.userId.charAt(0).toUpperCase() %></div>
+        <% } %>
+        <form action="/users/mypage/profile-image" method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          <input type="file" name="profileImage" id="profileImageInput" accept="image/*" style="display:none;">
+          <label for="profileImageInput" class="ig-auth-submit" style="width:auto; margin:0; padding:5px 12px; font-size:12px; cursor:pointer; white-space:nowrap;">파일 선택</label>
+          <button type="submit" class="ig-auth-submit" style="width:auto; margin:0; padding:5px 12px; font-size:12px; white-space:nowrap;">변경</button>
+        </form>
+      </div>
       <div>
         <div style="font-size:20px; font-weight:700; color:#262626; margin-bottom:4px;">
           <%= user.nickname || user.userId %>
