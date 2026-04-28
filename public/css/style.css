@@ -909,6 +909,19 @@ button { font-family: inherit; }
 .ig-auth-switch a:hover { color: #00376b; }
 
 /* =============================================
+   Mypage save button
+   ============================================= */
+.mypage-save-btn:disabled,
+.mypage-save-btn:hover:disabled {
+  background: #c7c7c7;
+  cursor: not-allowed;
+}
+.mypage-save-btn:not(:disabled) {
+  background: #0095f6;
+  cursor: pointer;
+}
+
+/* =============================================
    Admin badge
    ============================================= */
 .ig-admin-badge {

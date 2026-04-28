@@ -144,5 +144,31 @@ router.post('/mypage/profile-image', isLoggedIn, upload.single('profileImage'), 
     }
 });
 
+// 마이페이지 통합 업데이트
+router.post('/mypage/update', isLoggedIn, upload.single('profileImage'), async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user._id);
+        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+
+        const nickname = req.body.nickname ? req.body.nickname.trim() : '';
+        if (nickname && nickname !== (user.nickname || '')) {
+            if (nickname.length < 2 || nickname.length > 10) {
+                return res.status(400).send('닉네임은 2~10자여야 합니다.');
+            }
+            user.nickname = nickname;
+        }
+
+        if (req.file) {
+            user.profileImage = await uploadProfileImage(req.file, user.userId);
+        }
+
+        await user.save();
+        res.redirect('/users/mypage');
+    } catch (err) {
+        console.error('마이페이지 업데이트 실패', err);
+        res.status(500).send('서버 오류');
+    }
+});
+
 // 얘가 뭐하는 코드더라.../
 module.exports = router;
