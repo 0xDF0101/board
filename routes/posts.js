@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
             ? { $or: [{ title: { $regex: q, $options: 'i' } }, { content: { $regex: q, $options: 'i' } }] }
             : {};
         const postsFromDB = await Post.find(filter)
-            .populate('author', 'userId role')
+            .populate('author', 'userId nickname profileImage role')
             .sort({ createdAt: -1 })
             .limit(limit);
 
@@ -219,7 +219,7 @@ router.get('/api/posts', async (req, res) => {
             : {};
 
         const posts = await Post.find(filter)
-            .populate('author', 'userId role')
+            .populate('author', 'userId nickname profileImage role')
             .sort({ createdAt: -1 })
             .skip(skip) // 요만큼 건너뛰고
             .limit(limit); // 요만큼 가져오기

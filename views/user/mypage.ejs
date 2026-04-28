@@ -4,7 +4,11 @@
   <div class="ig-auth-card" style="max-width: 480px;">
 
     <div style="display:flex; align-items:center; gap:24px; margin-bottom:28px;">
-      <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); flex-shrink:0;"></div>
+      <% if (user.profileImage) { %>
+        <img src="<%= user.profileImage %>" class="ig-avatar" style="width:80px;height:80px;" alt="avatar">
+      <% } else { %>
+        <div class="ig-avatar-default" style="width:80px;height:80px;font-size:28px;"><%= user.userId.charAt(0).toUpperCase() %></div>
+      <% } %>
       <div>
         <div style="font-size:20px; font-weight:700; color:#262626; margin-bottom:4px;">
           <%= user.nickname || user.userId %>

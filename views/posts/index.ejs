@@ -20,14 +20,20 @@
       <article class="ig-card">
 
         <div class="ig-card-head">
-          <div class="ig-avatar-sm"></div>
+          <% if (post.author && post.author.profileImage) { %>
+            <img src="<%= post.author.profileImage %>" class="ig-avatar" alt="avatar">
+          <% } else { %>
+            <div class="ig-avatar-default">
+              <%= post.author && post.author.userId ? post.author.userId.charAt(0).toUpperCase() : '?' %>
+            </div>
+          <% } %>
           <div class="ig-card-meta">
             <span class="ig-card-username">
               <% if (post.author && post.author.userId) { %>
-                @<%= post.author.userId %>
+                <%= post.author.nickname || post.author.userId %>
                 <% if (post.author.role === 'admin') { %><span class="ig-admin-badge">관리자</span><% } %>
               <% } else { %>
-                @알 수 없음
+                알 수 없음
               <% } %>
             </span>
             <span class="ig-card-time">
