@@ -46,31 +46,38 @@ router.get('/', async (req, res) => {
             ? { $or: [{ title: { $regex: q, $options: 'i' } }, { content: { $regex: q, $options: 'i' } }] }
             : {};
         const postsFromDB = await Post.find(filter)
-            .populate('author', 'userId role') // author 필드를 참조해서 User모델의 userId 필드를 가져옴
-            // --> ref로 서로 참조하고 있기 때문에 다른 모델에서 관리해도 가져올 수 있음
+            .populate('author', 'userId role')
             .sort({ createdAt: -1 })
             .limit(limit);
 
         const postIds = postsFromDB.map(p => p._id);
-        const commentCounts = await Comment.aggregate([
-            { $match: { post: { $in: postIds } } },
-            { $group: { _id: '$post', count: { $sum: 1 } } },
-        ]);
-        const countMap = {};
-        commentCounts.forEach(c => { countMap[c._id.toString()] = c.count; });
 
-        const postsWithCounts = postsFromDB.map(p => ({
-            ...p.toObject(),
-            commentCount: countMap[p._id.toString()] || 0,
-            likes: (p.likes || []).length,
-        }));
+        const allComments = await Comment.find({ post: { $in: postIds } })
+            .populate('author', 'userId')
+            .sort({ createdAt: 1 });
 
-        // ----> await가 이렇게 편하다!
+        const commentsMap = {};
+        allComments.forEach(c => {
+            const pid = c.post.toString();
+            if (!commentsMap[pid]) commentsMap[pid] = [];
+            commentsMap[pid].push(c.toObject());
+        });
+
+        const postsWithCounts = postsFromDB.map(p => {
+            const comments = commentsMap[p._id.toString()] || [];
+            return {
+                ...p.toObject(),
+                commentCount: comments.length,
+                likes: (p.likes || []).length,
+                comments,
+            };
+        });
+
         res.render('posts/index', {
             postsFromDB: postsWithCounts,
             sessionUser: req.session.user,
             q,
-        }); // DB -> ejs로 post넘겨줌
+        });
     } catch (err) {
         console.log('DB에서 데이터를 불러오지 못했습니다.', err);
         res.status(500).send('DB 에러 발생');
@@ -102,38 +109,9 @@ router.get('/api/liked', (req, res) => {
         .catch(() => res.json({ likedIds: [] }));
 });
 
-// 게시글 상세 페이지를 보여주는 라우터
+// 상세 페이지 제거 — 피드로 리다이렉트
 router.get('/:id', (req, res) => {
-    const id = req.params.id; // 링크에 걸린 _id 땡겨오기
-    // comment 관련해서는 어떡하지?
-
-    Post.findById(id)
-        .populate('author', 'userId')
-        .then((post) => {
-            if (!post) {
-                return res
-                    .status(404)
-                    .send('해당 게시글을 찾을 수가 없습니다.');
-            }
-            Comment.find({ post: id })
-                .populate('author', 'userId')
-                .then((comments) => {
-                    const postData = { ...post.toObject(), likes: (post.likes || []).length };
-                    res.render('posts/show', {
-                        post: postData,
-                        comments,
-                        sessionUser: req.session.user,
-                    }); // 여기서 댓글이랑 같이 보낼 수 있음
-                })
-                .catch((err) => {
-                    console.log('뭔가 잘못됐음요;;', err);
-                    res.status(500).send('서버에서 뭔가 오류가 발생했습니다');
-                });
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('서버 오류가 발생했습니다.');
-        });
+    res.redirect('/posts');
 });
 
 // 삭제 라우터
@@ -221,7 +199,7 @@ router.put('/:id', isLoggedIn, checkPostOwnership, (req, res) => {
                 return res.status(404).send('해당 게시글을 찾을 수 없습니다.');
             }
             console.log('수정된 문서:', updatePost);
-            res.redirect('/posts/' + id);
+            res.redirect('/posts');
         })
         .catch((err) => {
             console.error('수정 중 에러', err);
@@ -248,18 +226,27 @@ router.get('/api/posts', async (req, res) => {
         const totalPosts = await Post.countDocuments(filter); // 전체 게시글 수 확인
 
         const postIds = posts.map(p => p._id);
-        const commentCounts = await Comment.aggregate([
-            { $match: { post: { $in: postIds } } },
-            { $group: { _id: '$post', count: { $sum: 1 } } },
-        ]);
-        const countMap = {};
-        commentCounts.forEach(c => { countMap[c._id.toString()] = c.count; });
 
-        const postsWithCounts = posts.map(p => ({
-            ...p.toObject(),
-            commentCount: countMap[p._id.toString()] || 0,
-            likes: (p.likes || []).length,
-        }));
+        const allComments = await Comment.find({ post: { $in: postIds } })
+            .populate('author', 'userId')
+            .sort({ createdAt: 1 });
+
+        const commentsMap = {};
+        allComments.forEach(c => {
+            const pid = c.post.toString();
+            if (!commentsMap[pid]) commentsMap[pid] = [];
+            commentsMap[pid].push(c.toObject());
+        });
+
+        const postsWithCounts = posts.map(p => {
+            const comments = commentsMap[p._id.toString()] || [];
+            return {
+                ...p.toObject(),
+                commentCount: comments.length,
+                likes: (p.likes || []).length,
+                comments,
+            };
+        });
 
         res.json({
             posts: postsWithCounts,
