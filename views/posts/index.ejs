@@ -91,7 +91,7 @@
             <div class="ig-comment-item">
               <div class="ig-comment-body">
                 <% if (comment.author && comment.author.userId) { %>
-                  <span class="ig-comment-author">@<%= comment.author.userId %></span>
+                  <a href="/users/<%= comment.author.userId %>" class="ig-comment-author" style="text-decoration:none; color:inherit; cursor:pointer;">@<%= comment.author.userId %></a>
                 <% } %>
                 <span class="ig-comment-text"><%= comment.content %></span>
               </div>
