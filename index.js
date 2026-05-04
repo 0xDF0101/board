@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 3000;
 const path = require('path');
 const session = require('express-session'); // ---> 세션 관리
 const isLoggedIn = require('./middlewares/authMiddleware');
-
+// modify
 require('dotenv').config(); // .env에서 환경 변수를 불러올 수 있음
 
 const mongoose = require('mongoose');
