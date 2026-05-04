@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
     // ID 중복성 검사
     const existingUser = await User.findOne({ userId });
     if (existingUser) {
-        return res.status(409).send('이미 존재하는 아이디입니다.');
+        return res.redirect('/users/register?error=' + encodeURIComponent('이미 존재하는 아이디입니다'));
     }
 
     try {
@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
         res.redirect('login'); // login 페이지로 이동
     } catch (err) {
         console.error('회원가입 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/users/register?error=' + encodeURIComponent('서버 오류'));
     }
 });
 
@@ -59,7 +59,7 @@ router.post('/login', async (req, res) => {
         // id 존재 여부
         const user = await User.findOne({ userId });
         if (!user) {
-            return res.status(400).send('존재하지 않는 아이디입니다.');
+            return res.redirect('/users/login?error=' + encodeURIComponent('존재하지 않는 아이디입니다'));
         }
 
         // 비밀번호 일치 여부
@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
         // userPw는 사용자가 입력한 친구
         // user.userPw는 DB에서 가져온 친구
         if (!isMatch) {
-            return res.status(400).send('비밀번호가 일치하지 않습니다.');
+            return res.redirect('/users/login?error=' + encodeURIComponent('비밀번호가 일치하지 않습니다'));
         }
 
         // 로그인 성공 -> 세션에 정보 저장
@@ -82,7 +82,7 @@ router.post('/login', async (req, res) => {
         res.redirect('/posts');
     } catch (err) {
         console.error('로그인 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/users/login?error=' + encodeURIComponent('서버 오류'));
     }
 });
 
@@ -93,7 +93,7 @@ router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.log('로그아웃 실패');
-            return res.status(500).send('로그아웃 중 오류 발생');
+            return res.redirect('/posts?error=' + encodeURIComponent('로그아웃 중 오류 발생'));
         }
         res.redirect('/posts');
     });
@@ -103,7 +103,7 @@ router.get('/logout', (req, res) => {
 router.get('/mypage', isLoggedIn, async (req, res) => {
     try {
         const user = await User.findById(req.session.user._id);
-        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+        if (!user) return res.redirect('/posts?error=' + encodeURIComponent('사용자를 찾을 수 없습니다'));
 
         const myPosts = await Post.find({ author: req.session.user._id })
             .select('title imageUrl createdAt likes')
@@ -121,7 +121,7 @@ router.get('/mypage', isLoggedIn, async (req, res) => {
         res.render('user/mypage', { sessionUser: req.session.user, user, myPosts });
     } catch (err) {
         console.error('마이페이지 로딩 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/posts?error=' + encodeURIComponent('서버 오류'));
     }
 });
 
@@ -129,34 +129,34 @@ router.get('/mypage', isLoggedIn, async (req, res) => {
 router.post('/mypage/nickname', isLoggedIn, async (req, res) => {
     const { nickname } = req.body;
     if (!nickname || nickname.trim().length < 2 || nickname.trim().length > 10) {
-        return res.status(400).send('닉네임은 2~10자여야 합니다.');
+        return res.redirect('/users/mypage?error=' + encodeURIComponent('닉네임은 2~10자여야 합니다'));
     }
     try {
         const user = await User.findById(req.session.user._id);
-        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+        if (!user) return res.redirect('/posts?error=' + encodeURIComponent('사용자를 찾을 수 없습니다'));
         user.nickname = nickname.trim();
         await user.save();
         res.redirect('/users/mypage');
     } catch (err) {
         console.error('닉네임 변경 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/users/mypage?error=' + encodeURIComponent('서버 오류'));
     }
 });
 
 // 프로필 이미지 변경
 router.post('/mypage/profile-image', isLoggedIn, upload.single('profileImage'), async (req, res) => {
     if (!req.file) {
-        return res.status(400).send('파일이 없습니다.');
+        return res.redirect('/users/mypage?error=' + encodeURIComponent('파일이 없습니다'));
     }
     try {
         const user = await User.findById(req.session.user._id);
-        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+        if (!user) return res.redirect('/posts?error=' + encodeURIComponent('사용자를 찾을 수 없습니다'));
         user.profileImage = await uploadProfileImage(req.file, user.userId);
         await user.save();
         res.redirect('/users/mypage');
     } catch (err) {
         console.error('프로필 이미지 변경 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/users/mypage?error=' + encodeURIComponent('서버 오류'));
     }
 });
 
@@ -164,12 +164,12 @@ router.post('/mypage/profile-image', isLoggedIn, upload.single('profileImage'), 
 router.post('/mypage/update', isLoggedIn, upload.single('profileImage'), async (req, res) => {
     try {
         const user = await User.findById(req.session.user._id);
-        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+        if (!user) return res.redirect('/posts?error=' + encodeURIComponent('사용자를 찾을 수 없습니다'));
 
         const nickname = req.body.nickname ? req.body.nickname.trim() : '';
         if (nickname && nickname !== (user.nickname || '')) {
             if (nickname.length < 2 || nickname.length > 10) {
-                return res.status(400).send('닉네임은 2~10자여야 합니다.');
+                return res.redirect('/users/mypage?error=' + encodeURIComponent('닉네임은 2~10자여야 합니다'));
             }
             user.nickname = nickname;
         }
@@ -182,7 +182,7 @@ router.post('/mypage/update', isLoggedIn, upload.single('profileImage'), async (
         res.redirect('/users/mypage');
     } catch (err) {
         console.error('마이페이지 업데이트 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/users/mypage?error=' + encodeURIComponent('서버 오류'));
     }
 });
 
@@ -198,12 +198,12 @@ router.get('/search', async (req, res) => {
             ]
         });
         if (!user) {
-            return res.redirect('/posts?searchError=' + encodeURIComponent('존재하지 않는 유저입니다'));
+            return res.redirect('/posts?error=' + encodeURIComponent('존재하지 않는 유저입니다'));
         }
         res.redirect(`/users/${user.userId}`);
     } catch (err) {
         console.error('유저 검색 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/posts?error=' + encodeURIComponent('서버 오류'));
     }
 });
 
@@ -211,7 +211,7 @@ router.get('/search', async (req, res) => {
 router.get('/:userId', async (req, res) => {
     try {
         const user = await User.findOne({ userId: req.params.userId });
-        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+        if (!user) return res.redirect('/posts?error=' + encodeURIComponent('사용자를 찾을 수 없습니다'));
 
         const posts = await Post.find({ author: user._id })
             .select('title imageUrl createdAt likes')
@@ -231,7 +231,7 @@ router.get('/:userId', async (req, res) => {
         res.render('user/profile', { sessionUser: req.session.user, user, posts, totalLikes });
     } catch (err) {
         console.error('프로필 페이지 로딩 실패', err);
-        res.status(500).send('서버 오류');
+        res.redirect('/posts?error=' + encodeURIComponent('서버 오류'));
     }
 });
 

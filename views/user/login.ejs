@@ -7,6 +7,8 @@
       <span class="ig-auth-logo-text">Board</span>
     </div>
 
+    <div id="inline-error" class="ig-auth-inline-error" style="display:none;"></div>
+
     <form action="/users/login" method="POST">
       <div class="ig-auth-field">
         <input type="text" id="userId" name="userId" class="ig-auth-input" placeholder="아이디" required autocomplete="username" />
@@ -30,4 +32,14 @@
 
 </div>
 
+<script>
+(function () {
+  var error = new URLSearchParams(window.location.search).get('error');
+  if (error) {
+    var el = document.getElementById('inline-error');
+    el.textContent = error;
+    el.style.display = 'block';
+  }
+})();
+</script>
 <%- include('../partials/footer') %>

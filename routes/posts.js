@@ -33,7 +33,7 @@ router.post('/', isLoggedIn, upload.single('image'), (req, res) => {
         })
         .catch((err) => {
             console.log('에러 발생', err);
-            res.status(500).send('서버 에러 발생');
+            res.redirect('/posts?error=' + encodeURIComponent('게시글 저장 중 오류가 발생했습니다'));
         });
 });
 
@@ -120,15 +120,13 @@ router.delete('/:id', isLoggedIn, checkPostOwnership, (req, res) => {
     Post.findByIdAndDelete(id)
         .then((deletedPost) => {
             if (!deletedPost) {
-                return res
-                    .status(404)
-                    .send('해당 게시글을 찾지 못해 삭제하지 못했습니다.');
+                return res.redirect('/posts?error=' + encodeURIComponent('해당 게시글을 찾지 못해 삭제하지 못했습니다'));
             }
             res.redirect('/posts');
         })
         .catch((err) => {
             console.error('삭제 중 서버 오류', err);
-            res.status(500).send('서버 오류입니다.');
+            res.redirect('/posts?error=' + encodeURIComponent('삭제 중 오류가 발생했습니다'));
         });
 });
 
@@ -159,7 +157,7 @@ router.post('/:id/like', isLoggedIn, (req, res) => {
         })
         .catch((err) => {
             console.error('서버 오류', err);
-            res.status(500).send('오류가 발생했습니다.');
+            res.status(500).json({ message: '서버 오류' });
         });
 });
 
@@ -171,13 +169,13 @@ router.get('/:id/edit', isLoggedIn, checkPostOwnership, (req, res) => {
     Post.findById(id)
         .then((post) => {
             if (!post) {
-                return res.status(404).send('해당 게시글이 없습니다.');
+                return res.redirect('/posts?error=' + encodeURIComponent('해당 게시글이 없습니다'));
             }
             res.render('posts/edit', { post });
         })
         .catch((err) => {
             console.error('서버 에러 발생', err);
-            res.status(500).send('오류가 발생했습니다.');
+            res.redirect('/posts?error=' + encodeURIComponent('서버 오류가 발생했습니다'));
         });
 
     // res.render('posts/edit', { id, post });
@@ -189,21 +187,20 @@ router.put('/:id', isLoggedIn, checkPostOwnership, (req, res) => {
     const { title, content } = req.body;
 
     if (!title || !content) {
-        // 모두 입력되었는지 먼저 확인
-        return res.status(400).send('제목과 내용을 모두 입력해주세요');
+        return res.redirect(`/posts/${id}/edit?error=` + encodeURIComponent('제목과 내용을 모두 입력해주세요'));
     }
 
     Post.findByIdAndUpdate(id, { title, content }, { new: true })
         .then((updatePost) => {
             if (!updatePost) {
-                return res.status(404).send('해당 게시글을 찾을 수 없습니다.');
+                return res.redirect('/posts?error=' + encodeURIComponent('해당 게시글을 찾을 수 없습니다'));
             }
             console.log('수정된 문서:', updatePost);
             res.redirect('/posts');
         })
         .catch((err) => {
             console.error('수정 중 에러', err);
-            res.status(500).send('수정 중 오류가 발생했습니다.');
+            res.redirect('/posts?error=' + encodeURIComponent('수정 중 오류가 발생했습니다'));
         });
 });
 

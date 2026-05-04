@@ -21,7 +21,7 @@ router.post('/:id/comments', isLoggedIn, (req, res) => {
         })
         .catch((err) => {
             console.log('댓글 저장이 안됐음!!!!', err);
-            res.status(500).send('서버 에러 발생');
+            res.redirect('/posts?error=' + encodeURIComponent('댓글 저장 중 오류가 발생했습니다'));
         });
 });
 
@@ -35,7 +35,7 @@ router.delete('/:id/comments/:commentId', isLoggedIn, checkCommentOwnership, (re
         })
         .catch((err) => {
             console.log('댓글 삭제 실패', err);
-            res.status(500).send('서버 오류');
+            res.redirect('/posts?error=' + encodeURIComponent('댓글 삭제 중 오류가 발생했습니다'));
         });
 });
 

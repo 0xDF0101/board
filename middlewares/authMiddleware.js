@@ -7,7 +7,7 @@ function isLoggedIn(req, res, next) {
     if (req.session.user) {
         next();
     } else {
-        res.redirect('/users/login');
+        res.redirect('/users/login?error=' + encodeURIComponent('로그인이 필요합니다'));
     }
 }
 
@@ -16,7 +16,7 @@ async function checkPostOwnership(req, res, next) {
     try {
         const post = await Post.findById(req.params.id); // id로 게시글 찾기
         if (!post) {
-            return res.status(404).send('게시글을 찾을 수 없습니다.');
+            return res.redirect('/posts?error=' + encodeURIComponent('게시글을 찾을 수 없습니다'));
         }
         // 글의 주인 id와 현재 로그인한 유저의 id가 같은지 확인
         if (
@@ -26,11 +26,11 @@ async function checkPostOwnership(req, res, next) {
         ) {
             next(); // 주인이 맞으면 통과!
         } else {
-            res.status(403).send('권한이 없습니다.'); // 주인이 아니면 거절
+            res.redirect('/posts?error=' + encodeURIComponent('권한이 없습니다')); // 주인이 아니면 거절
         }
     } catch (err) {
         console.log(err);
-        res.status(500).send('서버 오류');
+        res.redirect('/posts?error=' + encodeURIComponent('서버 오류'));
     }
 }
 
@@ -39,7 +39,7 @@ async function checkCommentOwnership(req, res, next) {
     try {
         const comment = await Comment.findById(req.params.commentId);
         if (!comment) {
-            return res.status(404).send('댓글을 찾을 수 없습니다.');
+            return res.redirect('/posts?error=' + encodeURIComponent('댓글을 찾을 수 없습니다'));
         }
         if (
             req.session.user &&
@@ -48,11 +48,11 @@ async function checkCommentOwnership(req, res, next) {
         ) {
             next();
         } else {
-            res.status(403).send('권한이 없습니다.');
+            res.redirect('/posts?error=' + encodeURIComponent('권한이 없습니다'));
         }
     } catch (err) {
         console.log(err);
-        res.status(500).send('서버 오류');
+        res.redirect('/posts?error=' + encodeURIComponent('서버 오류'));
     }
 }
 

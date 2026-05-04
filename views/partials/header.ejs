@@ -64,4 +64,24 @@
   </nav>
 </header>
 
+<div id="ig-toast-container"></div>
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var error = params.get('error');
+  var success = params.get('success');
+  var msg = error || success;
+  if (!msg) return;
+  var container = document.getElementById('ig-toast-container');
+  var toast = document.createElement('div');
+  toast.className = 'ig-toast ' + (error ? 'ig-toast-error' : 'ig-toast-success');
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(function () {
+    toast.classList.add('ig-toast-hide');
+    setTimeout(function () { toast.remove(); }, 400);
+  }, 3000);
+})();
+</script>
+
 <main class="ig-page">

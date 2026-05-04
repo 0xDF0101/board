@@ -1082,6 +1082,63 @@ button { font-family: inherit; }
 }
 
 /* =============================================
+   Toast notifications
+   ============================================= */
+#ig-toast-container {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.ig-toast {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  animation: ig-toast-in 0.3s ease;
+  white-space: nowrap;
+  max-width: 90vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ig-toast-error { background: #ed4956; }
+.ig-toast-success { background: #2db36f; }
+
+.ig-toast-hide {
+  animation: ig-toast-out 0.4s ease forwards;
+}
+
+@keyframes ig-toast-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ig-toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-10px); }
+}
+
+.ig-auth-inline-error {
+  color: #ed4956;
+  font-size: 13px;
+  text-align: center;
+  padding: 8px 12px;
+  background: #fff0f0;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+/* =============================================
    Mobile
    ============================================= */
 @media (max-width: 600px) {
