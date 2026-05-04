@@ -1,0 +1,69 @@
+<%- include('../partials/header') %>
+
+<div class="ig-auth-page">
+
+  <div class="ig-auth-card" style="max-width: 480px;">
+    <div style="display:flex; align-items:center; gap:24px;">
+      <div style="flex-shrink:0;">
+        <% if (user.profileImage) { %>
+          <img src="<%= user.profileImage %>" class="ig-avatar" style="width:80px;height:80px;" alt="avatar">
+        <% } else { %>
+          <div class="ig-avatar-default" style="width:80px;height:80px;font-size:28px;"><%= user.userId.charAt(0).toUpperCase() %></div>
+        <% } %>
+      </div>
+      <div>
+        <div style="font-size:20px; font-weight:700; color:#262626; margin-bottom:2px;">
+          <%= user.nickname || user.userId %>
+          <% if (user.role === 'admin') { %><span class="ig-admin-badge">관리자</span><% } %>
+        </div>
+        <div style="font-size:14px; color:#8e8e8e;">@<%= user.userId %></div>
+        <div class="ig-profile-stats">
+          <div class="ig-profile-stats-item">
+            <span class="ig-profile-stats-count"><%= posts.length %></span>
+            <span class="ig-profile-stats-label">게시물</span>
+          </div>
+          <div class="ig-profile-stats-item">
+            <span class="ig-profile-stats-count"><%= totalLikes %></span>
+            <span class="ig-profile-stats-label">좋아요</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ig-auth-card" style="max-width: 480px; padding: 0; overflow: hidden; margin-top: 12px;">
+    <div style="padding: 12px 0; border-bottom: 1px solid #dbdbdb; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: center; color: #262626;">
+      게시물
+    </div>
+    <% if (posts.length === 0) { %>
+      <p class="ig-empty">게시물이 없습니다</p>
+    <% } else { %>
+      <div class="ig-myposts-grid">
+        <% posts.forEach(function(post) { %>
+          <a href="/posts/<%= post._id %>" class="ig-mypost-cell">
+            <% if (post.imageUrl) { %>
+              <img src="<%= post.imageUrl %>" alt="">
+            <% } %>
+            <div class="ig-mypost-overlay">
+              <span class="ig-mypost-overlay-stat">
+                <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <%= post.likes.length %>
+              </span>
+              <span class="ig-mypost-overlay-stat">
+                <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <%= post.commentCount %>
+              </span>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>

@@ -186,5 +186,53 @@ router.post('/mypage/update', isLoggedIn, upload.single('profileImage'), async (
     }
 });
 
-// 얘가 뭐하는 코드더라.../
+// 유저 검색
+router.get('/search', async (req, res) => {
+    const q = req.query.q ? req.query.q.trim() : '';
+    if (!q) return res.redirect('/posts');
+    try {
+        const user = await User.findOne({
+            $or: [
+                { userId: { $regex: q, $options: 'i' } },
+                { nickname: { $regex: q, $options: 'i' } }
+            ]
+        });
+        if (!user) {
+            return res.redirect('/posts?searchError=' + encodeURIComponent('존재하지 않는 유저입니다'));
+        }
+        res.redirect(`/users/${user.userId}`);
+    } catch (err) {
+        console.error('유저 검색 실패', err);
+        res.status(500).send('서버 오류');
+    }
+});
+
+// 공개 프로필 페이지
+router.get('/:userId', async (req, res) => {
+    try {
+        const user = await User.findOne({ userId: req.params.userId });
+        if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
+
+        const posts = await Post.find({ author: user._id })
+            .select('title imageUrl createdAt likes')
+            .sort({ createdAt: -1 })
+            .lean();
+
+        const commentCounts = await Comment.aggregate([
+            { $match: { post: { $in: posts.map(p => p._id) } } },
+            { $group: { _id: '$post', count: { $sum: 1 } } }
+        ]);
+        const commentCountMap = {};
+        commentCounts.forEach(c => { commentCountMap[c._id.toString()] = c.count; });
+        posts.forEach(p => { p.commentCount = commentCountMap[p._id.toString()] || 0; });
+
+        const totalLikes = posts.reduce((sum, p) => sum + p.likes.length, 0);
+
+        res.render('user/profile', { sessionUser: req.session.user, user, posts, totalLikes });
+    } catch (err) {
+        console.error('프로필 페이지 로딩 실패', err);
+        res.status(500).send('서버 오류');
+    }
+});
+
 module.exports = router;

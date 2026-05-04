@@ -2,6 +2,8 @@
 
 <div class="ig-feed-wrap">
 
+  <div id="ig-search-error" class="ig-search-error" style="display:none;"></div>
+
   <div class="ig-search-bar">
     <form action="/posts" method="GET" class="ig-search-form">
       <input type="text" name="q" value="<%= q %>" placeholder="검색..." class="ig-search-input" />
@@ -30,7 +32,9 @@
           <div class="ig-card-meta">
             <span class="ig-card-username">
               <% if (post.author && post.author.userId) { %>
-                <%= post.author.nickname || post.author.userId %>
+                <a href="/users/<%= post.author.userId %>" class="ig-user-link">
+                  <%= post.author.nickname || post.author.userId %>
+                </a>
                 <% if (post.author.role === 'admin') { %><span class="ig-admin-badge">관리자</span><% } %>
               <% } else { %>
                 알 수 없음
@@ -146,6 +150,18 @@
 
 </div>
 
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var err = params.get('searchError');
+  if (err) {
+    var el = document.getElementById('ig-search-error');
+    el.textContent = err;
+    el.style.display = 'block';
+    history.replaceState(null, '', '/posts');
+  }
+})();
+</script>
 <script src="/js/like.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
