@@ -949,6 +949,61 @@ button { font-family: inherit; }
 }
 
 /* =============================================
+   My Posts Grid (mypage)
+   ============================================= */
+.ig-myposts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+}
+
+.ig-mypost-cell {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  position: relative;
+  background: #dbdbdb;
+  display: block;
+  cursor: pointer;
+}
+
+.ig-mypost-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ig-mypost-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.ig-mypost-cell:hover .ig-mypost-overlay {
+  opacity: 1;
+}
+
+.ig-mypost-overlay-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ig-mypost-overlay-stat svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* =============================================
    Mobile
    ============================================= */
 @media (max-width: 600px) {

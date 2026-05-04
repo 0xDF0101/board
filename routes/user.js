@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User'); // 사용자 모델을 불러옴
+const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 const bcrypt = require('bcrypt');
 const { isLoggedIn } = require('../middlewares/authMiddleware');
 const { upload, uploadProfileImage } = require('../middlewares/upload');
@@ -102,7 +104,21 @@ router.get('/mypage', isLoggedIn, async (req, res) => {
     try {
         const user = await User.findById(req.session.user._id);
         if (!user) return res.status(404).send('사용자를 찾을 수 없습니다.');
-        res.render('user/mypage', { sessionUser: req.session.user, user });
+
+        const myPosts = await Post.find({ author: req.session.user._id })
+            .select('title imageUrl createdAt likes')
+            .sort({ createdAt: -1 })
+            .lean();
+
+        const commentCounts = await Comment.aggregate([
+            { $match: { post: { $in: myPosts.map(p => p._id) } } },
+            { $group: { _id: '$post', count: { $sum: 1 } } }
+        ]);
+        const commentCountMap = {};
+        commentCounts.forEach(c => { commentCountMap[c._id.toString()] = c.count; });
+        myPosts.forEach(p => { p.commentCount = commentCountMap[p._id.toString()] || 0; });
+
+        res.render('user/mypage', { sessionUser: req.session.user, user, myPosts });
     } catch (err) {
         console.error('마이페이지 로딩 실패', err);
         res.status(500).send('서버 오류');
