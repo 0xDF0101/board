@@ -94,8 +94,16 @@
                   <a href="/users/<%= comment.author.userId %>" class="ig-comment-author" style="text-decoration:none; color:inherit; cursor:pointer;">@<%= comment.author.userId %></a>
                 <% } %>
                 <span class="ig-comment-text"><%= comment.content %></span>
+                <% if (sessionUser && comment.author && (String(comment.author._id) === String(sessionUser._id) || sessionUser.role === 'admin')) { %>
+                  <form action="/comments/<%= post._id %>/comments/<%= comment._id %>?_method=PUT" method="POST" class="ig-comment-edit-form" style="display:none;">
+                    <textarea name="content" class="ig-comment-input" rows="1"><%= comment.content %></textarea>
+                    <button type="submit" class="ig-comment-submit">저장</button>
+                    <button type="button" class="ig-comment-cancel">취소</button>
+                  </form>
+                <% } %>
               </div>
               <% if (sessionUser && comment.author && (String(comment.author._id) === String(sessionUser._id) || sessionUser.role === 'admin')) { %>
+                <button type="button" class="ig-comment-edit">수정</button>
                 <form action="/comments/<%= post._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline;">
                   <button type="submit" class="ig-comment-del">삭제</button>
                 </form>
@@ -117,8 +125,16 @@
                       <span class="ig-comment-author">@<%= comment.author.userId %></span>
                     <% } %>
                     <span class="ig-comment-text"><%= comment.content %></span>
+                    <% if (sessionUser && comment.author && (String(comment.author._id) === String(sessionUser._id) || sessionUser.role === 'admin')) { %>
+                      <form action="/comments/<%= post._id %>/comments/<%= comment._id %>?_method=PUT" method="POST" class="ig-comment-edit-form" style="display:none;">
+                        <textarea name="content" class="ig-comment-input" rows="1"><%= comment.content %></textarea>
+                        <button type="submit" class="ig-comment-submit">저장</button>
+                        <button type="button" class="ig-comment-cancel">취소</button>
+                      </form>
+                    <% } %>
                   </div>
                   <% if (sessionUser && comment.author && (String(comment.author._id) === String(sessionUser._id) || sessionUser.role === 'admin')) { %>
+                    <button type="button" class="ig-comment-edit">수정</button>
                     <form action="/comments/<%= post._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline;">
                       <button type="submit" class="ig-comment-del">삭제</button>
                     </form>
@@ -180,6 +196,24 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('click', function () {
     document.querySelectorAll('.ig-dropdown--open').forEach(function (d) {
       d.classList.remove('ig-dropdown--open');
+    });
+  });
+
+  document.querySelectorAll('.ig-comment-edit').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.ig-comment-item');
+      item.querySelector('.ig-comment-text').style.display = 'none';
+      item.querySelector('.ig-comment-edit-form').style.display = '';
+      btn.style.display = 'none';
+    });
+  });
+
+  document.querySelectorAll('.ig-comment-cancel').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.ig-comment-item');
+      item.querySelector('.ig-comment-text').style.display = '';
+      item.querySelector('.ig-comment-edit-form').style.display = 'none';
+      item.querySelector('.ig-comment-edit').style.display = '';
     });
   });
 

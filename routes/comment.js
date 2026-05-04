@@ -25,6 +25,25 @@ router.post('/:id/comments', isLoggedIn, (req, res) => {
         });
 });
 
+// 댓글 수정
+router.put('/:id/comments/:commentId', isLoggedIn, checkCommentOwnership, (req, res) => {
+    const { id, commentId } = req.params;
+    const { content } = req.body;
+
+    Comment.findById(commentId)
+        .then((comment) => {
+            comment.content = content;
+            return comment.save();
+        })
+        .then(() => {
+            res.redirect(`/posts/${id}`);
+        })
+        .catch((err) => {
+            console.log('댓글 수정 실패', err);
+            res.redirect('/posts?error=' + encodeURIComponent('댓글 수정 중 오류가 발생했습니다'));
+        });
+});
+
 // 댓글 삭제
 router.delete('/:id/comments/:commentId', isLoggedIn, checkCommentOwnership, (req, res) => {
     const { id, commentId } = req.params;
